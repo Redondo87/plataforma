@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F7EFE5;
+  padding: 2rem;
+}
+
+.logo-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-text {
+  position: absolute;
+  top: 40px; /* 💡 Baja el texto para que esté más centrado */
+  font-size: 32px; /* 💡 Más grande */
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none; /* Por si quieres que no bloquee clics a la imagen */
+}
+
+.logo {
+  width: 400px;  /* 💡 Más ancho */
+  height: 150px; /* 💡 Más alto */
+  object-fit: contain;
+}
+

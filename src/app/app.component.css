@@ -1,0 +1,11 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* altura total del viewport */
+  }
+  
+  .main-content {
+    flex: 1; /* ocupa el espacio entre header y footer */
+    padding: 2rem;
+  }
+  
