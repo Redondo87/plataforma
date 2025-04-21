@@ -1,11 +1,94 @@
 :host {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* altura total del viewport */
-  }
-  
-  .main-content {
-    flex: 1; /* ocupa el espacio entre header y footer */
-    padding: 2rem;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* toda la altura del viewport */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Contenedor entre header y footer */
+.main-container {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: row;
+  min-height: calc(100vh - 140px);
+}
+
+/* Formulario izquierdo */
+.login-dropdown {
+  width: 300px;
+  background-color: #F7EFE5;
+  padding: 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.login-dropdown label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.login-dropdown input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-dropdown button {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #E8DACB;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-dropdown button:hover {
+  background-color:#CBB6A1;
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Inicia sesión*/
+.form-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-dropdown form input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.login-dropdown form button {
+  background-color: #d8c9b1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+}

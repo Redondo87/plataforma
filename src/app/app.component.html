@@ -1,7 +1,55 @@
-<app-header></app-header>
+<app-header (toggleLoginEvent)="toggleLoginForm()"></app-header>
 
-<main class="main-content">
-  <router-outlet></router-outlet>
-</main>
+<div class="main-container">
+  <div *ngIf="showLoginForm" class="login-dropdown">
+    <ng-container *ngIf="!showRegisterForm; else registerForm">
+      <h2 class="form-title">Inicia sesión</h2>
+      <form>
+
+        <label>Nombre de usuario:</label><br />
+        <input type="text" /><br /><br />
+        
+        <label>Email:</label><br />
+        <input type="email" /><br /><br />
+
+        <label>Contraseña:</label><br />
+        <input type="password" /><br /><br />
+
+        <button type="submit">Entrar</button>
+      </form>
+      <p style="margin-top: 1rem;">
+        ¿No tienes una cuenta?
+        <a (click)="showRegister()" style="cursor: pointer; color: blue;">Regístrate aquí</a>
+      </p>
+    </ng-container>
+
+    <ng-template #registerForm>
+      <h2 class="form-title">Crear cuenta</h2>
+      <form>
+        <label>Email:</label><br />
+        <input type="email" /><br /><br />
+
+        <label>Contraseña:</label><br />
+        <input type="password" /><br /><br />
+
+        <label>Confirmar contraseña:</label><br />
+        <input type="password" /><br /><br />
+
+        <button type="submit">Registrarse</button>
+      </form>
+      <p style="margin-top: 1rem;">
+        ¿Ya tienes una cuenta?
+        <a (click)="showLogin()" style="cursor: pointer; color: blue;">Inicia sesión</a>
+      </p>
+    </ng-template>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 
 <app-footer></app-footer>
+
+
+
