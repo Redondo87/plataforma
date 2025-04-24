@@ -25,16 +25,19 @@
 
     <ng-template #registerForm>
       <h2 class="form-title">Crear cuenta</h2>
-      <form>
+      <form (submit)="registrarUsuario(); $event.preventDefault()">
+        <label>Nombre de usuario:</label><br />
+        <input type="text" [(ngModel)]="registroNombre" name="nombre" /><br /><br />
+    
         <label>Email:</label><br />
-        <input type="email" /><br /><br />
-
+        <input type="email" [(ngModel)]="registroEmail" name="email" /><br /><br />
+    
         <label>Contraseña:</label><br />
-        <input type="password" /><br /><br />
-
+        <input type="password" [(ngModel)]="registroPassword" name="password" /><br /><br />
+    
         <label>Confirmar contraseña:</label><br />
-        <input type="password" /><br /><br />
-
+        <input type="password" [(ngModel)]="registroConfirmacion" name="confirmPassword" /><br /><br />
+    
         <button type="submit">Registrarse</button>
       </form>
       <p style="margin-top: 1rem;">
