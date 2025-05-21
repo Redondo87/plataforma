@@ -1,9 +1,9 @@
-package Plataforma.Usuarios.service;
+package com.plataforma.usuarios.service;
 
+import com.plataforma.usuarios.model.Usuario;
+import com.plataforma.usuarios.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import Plataforma.Usuarios.model.Usuario;
-import Plataforma.Usuarios.model.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {

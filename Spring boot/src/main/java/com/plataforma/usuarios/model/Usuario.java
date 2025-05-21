@@ -1,4 +1,4 @@
-package Plataforma.Usuarios.model;
+package com.plataforma.usuarios.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -13,7 +13,8 @@ export interface Usuario {
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8080/usuarios'; // Ajustá esto a tu backend
+  private apiUrl = 'http://localhost:8080/api/usuarios/registrar';
+
 
   constructor(private http: HttpClient) {}
 
