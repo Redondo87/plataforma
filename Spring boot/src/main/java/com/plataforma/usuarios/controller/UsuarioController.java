@@ -2,7 +2,6 @@ package com.plataforma.usuarios.controller;
 
 import com.plataforma.usuarios.model.Usuario;
 import com.plataforma.usuarios.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,11 +9,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping("/registrar")
     public Usuario registrar(@RequestBody Usuario usuario) {
-         return usuarioService.registrarUsuario(usuario); 
+        return usuarioService.registrarUsuario(usuario);
     }
 }
