@@ -1,12 +1,62 @@
 <header class="header">
-  <nav>
-    <a (click)="toggleLogin()" class="nav-link">Perfil</a>
-  </nav>
+  <!-- Sección izquierda: Perfil o cerrar sesión -->
+  <div class="header-left">
+    <ng-container *ngIf="usuarioLogueado; else perfilLink">
+      <span class="nav-link">Hola, {{ nombreUsuario }}</span>
+    </ng-container>
+    <ng-template #perfilLink>
+      <a (click)="toggleLogin()" class="nav-link">Perfil</a>
+    </ng-template>
+  </div>
 
+  <!-- Sección centro: Logo -->
   <div class="logo-container">
     <a routerLink="/" class="logo-link">
       <img src="assets/images/logo2.png" alt="Logo" class="logo" />
     </a>
   </div>
+
+  <!-- Sección derecha: Íconos -->
+  <div class="header-right">
+    <img src="assets/images/lupa.png" alt="Libros" class="icon" (click)="toggleLibros()" />
+    <img src="assets/images/video.png" alt="Series" class="icon" (click)="toggleSeries()" />
+  </div>
 </header>
 
+<!-- Buscador de libros -->
+<div class="fullscreen-search" *ngIf="buscadorActivo">
+  <div class="search-content">
+    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleLibros()" />
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar libros..."
+      [(ngModel)]="terminoLibro"
+      (input)="buscarLibros()"
+    />
+    <ul class="resultados-lista" *ngIf="resultadosLibros.length > 0">
+      <li *ngFor="let libro of resultadosLibros">
+        {{ libro.volumeInfo?.title || 'Sin título' }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Buscador de series/películas -->
+<div class="fullscreen-search" *ngIf="buscadorSeriesActivo">
+  <div class="search-content">
+    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleSeries()" />
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar series o películas..."
+      [(ngModel)]="terminoSerie"
+      (input)="buscarSeries()"
+    />
+    <ul class="resultados-lista" *ngIf="resultadosSeries.length > 0">
+      <li *ngFor="let item of resultadosSeries">
+        {{ item.title || item.name || 'Sin nombre' }}
+      </li>
+    </ul>
+  </div>
+</div>

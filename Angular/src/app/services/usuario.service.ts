@@ -16,7 +16,7 @@ export class UsuarioService {
   private apiUrl = 'http://localhost:8080/api/usuarios/registrar';
 
 
-  constructor(private http: HttpClient) {}
+  constructor(public http: HttpClient) {}
 
   registrar(usuario: Usuario): Observable<any> {
     return this.http.post(this.apiUrl, usuario);

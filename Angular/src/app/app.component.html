@@ -1,19 +1,58 @@
-<app-header (toggleLoginEvent)="toggleLoginForm()"></app-header>
+<app-header
 
+  [usuarioLogueado]="usuarioLogueado"
+  [nombreUsuario]="nombreUsuario"
+  (cerrarSesionEvent)="cerrarSesion()"
+  (toggleLoginEvent)="toggleLoginForm()"
+  (toggleLibrosEvent)="toggleLibros()"
+  (toggleSeriesEvent)="toggleSeries()"
+></app-header>
+
+
+<!-- 🔍 Desplegable de Libros -->
+<div *ngIf="mostrarLibros" class="desplegable-api">
+  <input
+    type="text"
+    [(ngModel)]="busquedaLibros"
+    (input)="buscarLibros()"
+    placeholder="Buscar libros..."
+  />
+  <ul>
+    <li *ngFor="let libro of resultadosLibros">
+      {{ libro.volumeInfo.title }}
+    </li>
+  </ul>
+</div>
+
+<!-- 🎬 Desplegable de Series/Películas -->
+<div *ngIf="mostrarSeries" class="desplegable-api">
+  <input
+    type="text"
+    [(ngModel)]="busquedaSeries"
+    (input)="buscarSeries()"
+    placeholder="Buscar series/películas..."
+  />
+  <ul>
+    <li *ngFor="let item of resultadosSeries">
+      {{ item.title || item.name }}
+    </li>
+  </ul>
+</div>
+
+<!-- Login -->
 <div class="main-container">
   <div *ngIf="showLoginForm" class="login-dropdown">
     <ng-container *ngIf="!showRegisterForm; else registerForm">
       <h2 class="form-title">Inicia sesión</h2>
-      <form>
-
+      <form (submit)="loginUsuario(); $event.preventDefault()">
         <label>Nombre de usuario:</label><br />
-        <input type="text" /><br /><br />
+        <input type="text" [(ngModel)]="registroNombre" name="loginNombre" /><br /><br />
         
         <label>Email:</label><br />
-        <input type="email" /><br /><br />
+        <input type="email" [(ngModel)]="registroEmail" name="loginEmail" /><br /><br />
 
         <label>Contraseña:</label><br />
-        <input type="password" /><br /><br />
+        <input type="password" [(ngModel)]="registroPassword" name="loginPassword" /><br /><br />
 
         <button type="submit">Entrar</button>
       </form>
@@ -28,16 +67,16 @@
       <form (submit)="registrarUsuario(); $event.preventDefault()">
         <label>Nombre de usuario:</label><br />
         <input type="text" [(ngModel)]="registroNombre" name="nombre" /><br /><br />
-    
+
         <label>Email:</label><br />
         <input type="email" [(ngModel)]="registroEmail" name="email" /><br /><br />
-    
+
         <label>Contraseña:</label><br />
         <input type="password" [(ngModel)]="registroPassword" name="password" /><br /><br />
-    
+
         <label>Confirmar contraseña:</label><br />
         <input type="password" [(ngModel)]="registroConfirmacion" name="confirmPassword" /><br /><br />
-    
+
         <button type="submit">Registrarse</button>
       </form>
       <p style="margin-top: 1rem;">
@@ -53,6 +92,3 @@
 </div>
 
 <app-footer></app-footer>
-
-
-
