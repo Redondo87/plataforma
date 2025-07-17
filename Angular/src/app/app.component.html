@@ -17,12 +17,8 @@
     (input)="buscarLibros()"
     placeholder="Buscar libros..."
   />
-  <ul>
-    <li *ngFor="let libro of resultadosLibros">
-      {{ libro.volumeInfo.title }}
-    </li>
-  </ul>
 </div>
+
 
 <!-- 🎬 Desplegable de Series/Películas -->
 <div *ngIf="mostrarSeries" class="desplegable-api">

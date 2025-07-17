@@ -1,3 +1,17 @@
+interface LibroGoogle {
+  volumeInfo: {
+    title: string;
+    authors?: string[];
+    description?: string;
+    imageLinks?: { thumbnail?: string };
+  };
+  saleInfo?: {
+    listPrice?: {
+      amount: number;
+    };
+  };
+}
+
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService, Usuario } from './services/usuario.service';
@@ -39,6 +53,8 @@ export class AppComponent {
 
   busquedaSeries = '';
   resultadosSeries: any[] = [];
+
+  
 
   constructor(private usuarioService: UsuarioService) {}
 
@@ -125,8 +141,19 @@ export class AppComponent {
     const query = encodeURIComponent(this.busquedaLibros);
     const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`;
 
-    this.usuarioService.http.get<any>(url).subscribe(res => {
-      this.resultadosLibros = res.items || [];
+    this.usuarioService.http.get<any>(url).subscribe(response => {
+      this.resultadosLibros = (response.items || []).map((item: LibroGoogle) => {
+        const info = item.volumeInfo;
+        const sale = item.saleInfo;
+
+        return {
+          titulo: info.title,
+          autor: info.authors?.[0] || 'Autor desconocido',
+          descripcion: info.description || 'Sin descripción disponible.',
+          precio: sale?.listPrice?.amount ?? null,
+          imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
+        };
+      });
     });
   }
 
@@ -144,4 +171,5 @@ export class AppComponent {
       this.resultadosSeries = res.results || [];
     });
   }
+
 }

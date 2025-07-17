@@ -1,0 +1,7 @@
+<div *ngIf="serie" class="detalle-serie">
+  <h2>{{ serie.name || serie.title }}</h2>
+  <img [src]="'https://image.tmdb.org/t/p/w500/' + serie.poster_path" alt="Portada" />
+  <p><strong>Descripción:</strong></p>
+  <p>{{ serie.overview }}</p>
+  <p><strong>Fecha de estreno:</strong> {{ serie.first_air_date || serie.release_date }}</p>
+</div>

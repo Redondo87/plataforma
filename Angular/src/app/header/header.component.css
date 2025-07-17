@@ -78,38 +78,42 @@ nav {
   background-color: rgba(255, 255, 255, 0.95);
   z-index: 9999;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   padding-top: 2rem;
+  overflow-y: auto;      /* ✅ Scroll solo vertical */
+  overflow-x: hidden;    /* ✅ Sin scroll horizontal */
 }
 
+/* Contenedor de buscador y resultados */
 .search-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  width: 80%;
-  max-width: 600px;
-  position: relative;
+  width: 80%;           /* ✅ Mantiene tamaño moderado */
+  max-width: 900px;     /* ✅ Limita tamaño para evitar que sea muy ancho */
+  box-sizing: border-box;
 }
 
+/* Input de búsqueda */
 .search-input {
   width: 100%;
   padding: 1rem;
-  font-size: 24px;
+  font-size: 20px;
   border: none;
   outline: none;
-  background-color: #F7EFE5;
   border-radius: 8px;
 }
 
-/* Icono de cierre */
+/* Ícono de cierre (a la izquierda del input) */
 .close-icon {
   width: 32px;
   height: 32px;
   cursor: pointer;
   position: absolute;
-  left: -40px;
+  left: -50px;  /* ✅ Lo mantiene a la izquierda del buscador */
   top: 0.5rem;
 }
 
@@ -122,17 +126,52 @@ nav {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  max-height: 300px;
   overflow-y: auto;
 }
 
+/* Resultados individuales */
 .resultados-lista li {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .resultados-lista li:hover {
   background-color: #f0f0f0;
+}
+
+/* Galería de imágenes */
+.resultados-lista.imagenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 👈 Más flexible */
+  gap: 1rem;
+  padding: 2rem;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow-y: auto;
+}
+
+
+/* Imagen individual */
+.resultados-lista.imagenes li {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.resultados-lista.imagenes img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.resultados-lista.imagenes img:hover {
+  transform: scale(1.05);
 }

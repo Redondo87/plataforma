@@ -25,7 +25,7 @@
 
 <!-- Buscador de libros -->
 <div class="fullscreen-search" *ngIf="buscadorActivo">
-  <div class="search-content">
+  <div class="search-content" [ngClass]="{ 'has-images': resultadosLibros.length > 0 }">
     <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleLibros()" />
     <input
       type="text"
@@ -34,9 +34,12 @@
       [(ngModel)]="terminoLibro"
       (input)="buscarLibros()"
     />
-    <ul class="resultados-lista" *ngIf="resultadosLibros.length > 0">
+    <ul class="resultados-lista imagenes" *ngIf="resultadosLibros.length > 0">
       <li *ngFor="let libro of resultadosLibros">
-        {{ libro.volumeInfo?.title || 'Sin título' }}
+        <a [routerLink]="['/libro', libro.id]" (click)="cerrarBuscadorLibros()">
+          <img [src]="libro.volumeInfo.imageLinks?.thumbnail || 'assets/images/imagenNoDisponible.png'" 
+               alt="Portada de {{ libro.volumeInfo?.title }}" />
+        </a>
       </li>
     </ul>
   </div>
@@ -44,7 +47,7 @@
 
 <!-- Buscador de series/películas -->
 <div class="fullscreen-search" *ngIf="buscadorSeriesActivo">
-  <div class="search-content">
+  <div class="search-content" [ngClass]="{ 'has-images': resultadosSeries.length > 0 }">
     <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleSeries()" />
     <input
       type="text"
@@ -53,9 +56,11 @@
       [(ngModel)]="terminoSerie"
       (input)="buscarSeries()"
     />
-    <ul class="resultados-lista" *ngIf="resultadosSeries.length > 0">
+    <ul class="resultados-lista imagenes" *ngIf="resultadosSeries.length > 0">
       <li *ngFor="let item of resultadosSeries">
-        {{ item.title || item.name || 'Sin nombre' }}
+        <a [routerLink]="['/serie', item.media_type, item.id]" (click)="cerrarBuscadorSeries()">
+          <img [src]="getPosterUrl(item.poster_path)" alt="Portada de {{ item.title || item.name }}" />
+        </a>
       </li>
     </ul>
   </div>

@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-header',
@@ -27,7 +30,15 @@ export class HeaderComponent {
   terminoSerie = '';
   resultadosSeries: any[] = [];
 
-  constructor(private http: HttpClient) {}
+ constructor(private http: HttpClient, private router: Router) {
+  this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
+      this.buscadorActivo = false;
+      this.buscadorSeriesActivo = false;
+    });
+}
+
 
   toggleLogin() {
     this.toggleLoginEvent.emit();
@@ -78,4 +89,23 @@ export class HeaderComponent {
       this.resultadosSeries = res.results || [];
     });
   }
+
+  getPosterUrl(path: string | null): string {
+  return path
+    ? `https://image.tmdb.org/t/p/w500${path}`
+    : 'assets/images/imagenNoDisponible.png';
+}
+
+cerrarBuscadorLibros() {
+  this.buscadorActivo = false;
+  this.resultadosLibros = [];
+  this.terminoLibro = '';
+}
+
+cerrarBuscadorSeries() {
+  this.buscadorSeriesActivo = false;
+  this.resultadosSeries = [];
+  this.terminoSerie = '';
+}
+
 }
