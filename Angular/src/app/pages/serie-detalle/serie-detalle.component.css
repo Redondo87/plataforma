@@ -1,0 +1,41 @@
+.detalle-serie {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.serie-contenido {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  max-width: 900px;
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.serie-izquierda {
+  flex: 1;
+  text-align: center;
+}
+
+.serie-izquierda img {
+  width: 250px;
+  border-radius: 8px;
+}
+
+.serie-derecha {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.serie-derecha p {
+  margin: 0.5rem 0;
+}

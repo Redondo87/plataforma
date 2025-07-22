@@ -1,7 +1,18 @@
 <div *ngIf="serie" class="detalle-serie">
-  <h2>{{ serie.name || serie.title }}</h2>
-  <img [src]="'https://image.tmdb.org/t/p/w500/' + serie.poster_path" alt="Portada" />
-  <p><strong>Descripción:</strong></p>
-  <p>{{ serie.overview }}</p>
-  <p><strong>Fecha de estreno:</strong> {{ serie.first_air_date || serie.release_date }}</p>
+  <div class="serie-contenido">
+
+    <!-- 🎞️ Columna izquierda -->
+    <div class="serie-izquierda">
+      <img [src]="'https://image.tmdb.org/t/p/w500/' + serie.poster_path" alt="Portada" />
+      <h2>{{ serie.name || serie.title }}</h2>
+      <p><strong>Fecha de estreno:</strong> {{ serie.first_air_date || serie.release_date }}</p>
+    </div>
+
+    <!-- 📝 Columna derecha -->
+    <div class="serie-derecha">
+      <p><strong>Descripción:</strong></p>
+      <p [innerHTML]="serie.overview || 'Sin descripción disponible.'"></p>
+    </div>
+
+  </div>
 </div>
