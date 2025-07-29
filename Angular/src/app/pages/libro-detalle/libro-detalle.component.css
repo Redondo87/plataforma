@@ -1,7 +1,7 @@
+
 .detalle-libro {
   margin: 2rem auto;
   max-width: 1000px;
-  background-color: #f9f9f9;
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
@@ -61,3 +61,38 @@
   color: red;
   font-weight: bold;
 }
+
+@media (max-width: 768px) {
+  .libro-contenido {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .libro-izquierda,
+  .libro-derecha {
+    width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .libro-izquierda img {
+    width: 140px;
+  }
+
+  .libro-derecha {
+    text-align: left;
+  }
+
+  .libro-derecha p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .acciones-centro {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
