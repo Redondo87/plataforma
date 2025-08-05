@@ -1,28 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
   private API_URL = 'https://api.themoviedb.org/3';
-  private API_KEY = 'T218315c8512d576a1f186b27b8d7538e'; 
+  private API_KEY = '218315c8512d576a1f186b27b8d7538e'; 
 
   constructor(private http: HttpClient) {}
 
-  buscarSeries(termino: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/search/multi`, {
-      params: {
-        api_key: this.API_KEY,
-        query: termino
-      }
+  obtenerDetalle(tipo: 'tv' | 'movie', id: string): Observable<any> {
+    const detalle$ = this.http.get<any>(`${this.API_URL}/${tipo}/${id}`, {
+      params: { api_key: this.API_KEY, language: 'es' }
     });
-  }
 
-  obtenerDetalle(tipo: string, id: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/${tipo}/${id}`, {
-      params: {
-        api_key: this.API_KEY
-      }
+    const proveedores$ = this.http.get<any>(`${this.API_URL}/${tipo}/${id}/watch/providers`, {
+      params: { api_key: this.API_KEY }
     });
+
+    return forkJoin({ detalle: detalle$, proveedores: proveedores$ }).pipe(
+      map(({ detalle, proveedores }) => {
+        const region = proveedores?.results?.['ES'];
+        const streamingProviders = region?.flatrate || [];
+        return {
+          ...detalle,
+          streamingProviders
+        };
+      })
+    );
   }
 }

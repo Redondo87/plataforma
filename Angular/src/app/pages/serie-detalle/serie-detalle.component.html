@@ -1,19 +1,31 @@
 <div *ngIf="serie" class="detalle-serie">
   <div class="serie-contenido">
-
-    <!-- 🎞️ Columna izquierda -->
     <div class="serie-izquierda">
       <img [src]="'https://image.tmdb.org/t/p/w500/' + serie.poster_path" alt="Portada" />
       <h2>{{ serie.name || serie.title }}</h2>
-     <p><strong>Fecha de estreno:</strong> {{ (serie.first_air_date || serie.release_date) | date:'dd/MM/yyyy' }}</p>
-
+      <p><strong>Fecha de estreno:</strong> {{ (serie.first_air_date || serie.release_date) | date:'dd/MM/yyyy' }}</p>
     </div>
 
-    <!-- 📝 Columna derecha -->
     <div class="serie-derecha">
       <p><strong>Descripción:</strong></p>
       <p [innerHTML]="serie.overview || 'Sin descripción disponible.'"></p>
-    </div>
 
+      <!-- Proveedores de streaming -->
+      <div class="streaming-icons">
+  <a *ngFor="let proveedor of serie.streamingProviders"
+     [href]="getProveedorUrl(proveedor.provider_name)"
+     target="_blank"
+     rel="noopener noreferrer"
+     title="{{ proveedor.provider_name }}">
+    <img [src]="'https://image.tmdb.org/t/p/w45' + proveedor.logo_path"
+         [alt]="proveedor.provider_name" />
+  </a>
+</div>
+
+
+      <div *ngIf="!serie.streamingProviders?.length">
+        <p><em>No disponible en plataformas de streaming.</em></p>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,21 +1,19 @@
 <div *ngIf="libro" class="detalle-libro">
   <div class="libro-contenido">
-    
+
     <!-- 📕 Columna izquierda -->
     <div class="libro-izquierda">
-      <img [src]="libro.volumeInfo.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'" alt="Portada" />
+      <img [src]="libro.volumeInfo.imageLinks?.thumbnail || 'assets/images/imagenNoDisponible.png'" alt="Portada" />
       <h2>{{ libro.volumeInfo.title }}</h2>
       <p><strong>Autor:</strong> {{ libro.volumeInfo.authors?.[0] || 'Autor desconocido' }}</p>
 
-      <p *ngIf="libro.saleInfo?.listPrice?.amount !== undefined; else noStock">
-        <strong>Precio:</strong> {{ libro.saleInfo.listPrice.amount }} €
+      <p>
+        <strong>Precio:</strong>
+        {{ libro.saleInfo?.listPrice?.amount ? (libro.saleInfo.listPrice.amount + ' €') : 'Precio no disponible' }}
       </p>
-      <ng-template #noStock>
-        <p class="sin-stock">❌ No hay stock</p>
-      </ng-template>
 
       <div class="acciones-centro">
-        <button (click)="comprarLibro()">Comprar</button>
+        <button (click)="abrirEnGoogleBooks()">Comprar en Google Books</button>
       </div>
     </div>
 
@@ -27,4 +25,3 @@
 
   </div>
 </div>
-
