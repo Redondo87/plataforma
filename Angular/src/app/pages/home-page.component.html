@@ -1,1 +1,25 @@
-<p>home-page works!</p>
+<div class="home-container">
+  <div class="botones-principales">
+    <!-- 🔽 Menú desplegable Libros -->
+    <div class="dropdown">
+      <button class="btn-explorar">📚 Libros</button>
+      <div class="dropdown-content">
+        <li><a routerLink="/busqueda-libros">🔍 Búsqueda de Libros</a></li>
+        <li><a routerLink="/mejores-libros">⭐ Mejores Libros</a></li>
+        <li><a routerLink="/reseñas-libros">✍️ Reseñas</a></li>
+        <li><a routerLink="/recomendaciones-libros">📖 Recomendaciones</a></li>
+      </div>
+    </div>
+
+    <!-- 🔽 Menú desplegable Series/Películas -->
+    <div class="dropdown">
+      <button class="btn-explorar">🎬 Series/Películas</button>
+      <div class="dropdown-content">
+        <a routerLink="/series/busqueda">🔎 Búsqueda de series/películas</a>
+        <a routerLink="/series/mejores">⭐ Las mejores series/películas</a>
+        <a routerLink="/series/resenas">📝 Reseñas</a>
+        <a routerLink="/series/recomendaciones">💡 Recomendaciones</a>
+      </div>
+    </div>
+  </div>
+</div>

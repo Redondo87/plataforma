@@ -14,7 +14,7 @@
 }
 
 .serie-izquierda img {
-  width: 200px; /* Imagen más pequeña */
+  width: 200px;
   height: auto;
   border-radius: 6px;
 }
@@ -26,14 +26,15 @@
 
 .serie-derecha h2 {
   margin-top: 0;
-  margin-bottom: 2rem; /* Más espacio debajo del título */
+  margin-bottom: 2rem;
 }
 
 .espaciado-descripcion {
-  margin-top: 1.5rem; /* Más separación desde el título */
+  margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
+/* 🔄 Responsive layout */
 @media (max-width: 768px) {
   .serie-contenido {
     flex-direction: column;
@@ -51,7 +52,7 @@
   }
 }
 
-/* botones streamen */
+/* 🎬 Botones de streaming */
 .streaming {
   margin-top: 1.5rem;
 }
@@ -59,9 +60,9 @@
 .proveedores {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5 rem;
+  gap: 1.5rem;
   margin-top: 0.5rem;
-  justify-content: start;
+  justify-content: center; /* ✅ centrado */
 }
 
 .proveedores a {
@@ -80,7 +81,7 @@
   transform: scale(1.1);
 }
 
-/* 🔄 RESPONSIVE para pantallas pequeñas */
+/* 📱 Responsive: pantallas medianas */
 @media (max-width: 768px) {
   .proveedores {
     justify-content: center;
@@ -92,9 +93,9 @@
   }
 }
 
+/* 📱 Responsive: pantallas pequeñas */
 @media (max-width: 480px) {
   .proveedores img {
     width: 30px;
   }
 }
-

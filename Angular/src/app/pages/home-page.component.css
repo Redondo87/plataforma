@@ -1,0 +1,57 @@
+.home-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.botones-principales {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.btn-explorar {
+  background-color: #567D6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-explorar:hover {
+  background-color: #F7EFE5;
+}
+
+/* 🔽 Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 240px;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Mostrar menú cuando pasamos el ratón */
+.dropdown:hover .dropdown-content {
+  display: block;
+}

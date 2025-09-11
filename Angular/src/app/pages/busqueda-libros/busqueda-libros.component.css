@@ -1,0 +1,30 @@
+
+input {
+  padding: 0.5rem;
+  width: 300px;
+  margin: 1rem auto;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+li img {
+  flex-shrink: 0;
+}
+
+li div {
+  margin-left: 10px;
+}

@@ -1,0 +1,31 @@
+<!-- 🔍 Buscador -->
+<input
+  type="text"
+  placeholder="Buscar un libro..."
+  [(ngModel)]="busqueda"
+  (input)="buscarLibros()"
+/>
+
+<!-- 📑 Lista de géneros -->
+<h3>Géneros</h3>
+<ul>
+  <li *ngFor="let genero of generos">{{ genero }}</li>
+</ul>
+
+<!-- 📖 Resultados -->
+<div *ngIf="resultados.length > 0">
+  <h3>Resultados</h3>
+  <ul>
+    <li *ngFor="let libro of resultados">
+      <img
+        [src]="libro.imagen"
+        alt="Portada"
+        style="width: 60px; margin-right: 10px;"
+      />
+      <div>
+        <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
+        <p>{{ libro.descripcion }}</p>
+      </div>
+    </li>
+  </ul>
+</div>

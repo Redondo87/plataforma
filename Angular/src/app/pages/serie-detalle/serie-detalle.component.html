@@ -11,7 +11,7 @@
       <p [innerHTML]="serie.overview || 'Sin descripción disponible.'"></p>
 
       <!-- Proveedores de streaming -->
-      <div class="streaming-icons">
+      <div class="proveedores">
   <a *ngFor="let proveedor of serie.streamingProviders"
      [href]="getProveedorUrl(proveedor.provider_name)"
      target="_blank"
