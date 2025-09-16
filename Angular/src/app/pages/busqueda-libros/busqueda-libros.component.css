@@ -28,3 +28,29 @@ li img {
 li div {
   margin-left: 10px;
 }
+
+.genero {
+  padding: 6px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.generos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
+  gap: 10px; /* espacio entre géneros */
+  margin-top: 10px;
+}
+
+.genero-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.genero-item:hover {
+  background: #ddd; /* efecto hover */
+}

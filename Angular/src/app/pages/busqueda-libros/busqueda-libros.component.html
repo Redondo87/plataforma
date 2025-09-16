@@ -1,3 +1,5 @@
+<!--<h2>📚 Búsqueda de Libros</h2> -->
+
 <!-- 🔍 Buscador -->
 <input
   type="text"
@@ -6,22 +8,30 @@
   (input)="buscarLibros()"
 />
 
-<!-- 📑 Lista de géneros -->
+<!-- 📑 Lista de géneros en horizontal -->
 <h3>Géneros</h3>
-<ul>
-  <li *ngFor="let genero of generos">{{ genero }}</li>
-</ul>
+<div class="generos-grid">
+  <span
+    *ngFor="let genero of generos"
+    class="genero"
+    (click)="buscarPorGenero(genero)"
+  >
+    {{ genero }}
+  </span>
+</div>
 
 <!-- 📖 Resultados -->
 <div *ngIf="resultados.length > 0">
   <h3>Resultados</h3>
   <ul>
     <li *ngFor="let libro of resultados">
-      <img
-        [src]="libro.imagen"
-        alt="Portada"
-        style="width: 60px; margin-right: 10px;"
-      />
+      <a [routerLink]="['/libro', libro.id]">
+        <img
+          [src]="libro.imagen"
+          alt="Portada"
+          style="width: 60px; margin-right: 10px; cursor: pointer;"
+        />
+      </a>
       <div>
         <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
         <p>{{ libro.descripcion }}</p>
