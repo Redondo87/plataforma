@@ -1,0 +1,12 @@
+<div *ngIf="libro; else cargando" class="detalle-libro">
+  <h2>{{ libro.titulo }}</h2>
+  <img [src]="libro.imagen" alt="Portada" />
+  <p><strong>Autor:</strong> {{ libro.autor }}</p>
+  <p><strong>Descripción:</strong> {{ libro.descripcion }}</p>
+</div>
+
+<ng-template #cargando>
+  <p>Cargando detalles del libro...</p>
+</ng-template>
+
+<button >Añadir a mi lista</button>

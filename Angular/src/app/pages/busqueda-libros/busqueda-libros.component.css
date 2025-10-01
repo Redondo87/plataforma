@@ -1,18 +1,44 @@
+/* 🔍 Estilo del buscador */
+.buscador-container {
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+}
 
 input {
   padding: 0.5rem;
-  width: 300px;
-  margin: 1rem auto;
-  display: block;
+  width: 400px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
+/* 📖 Cuadro flotante de resultados */
+.resultados-flotantes {
+  position: absolute;
+  top: 50px; /* debajo del input */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  max-height: 400px;
+  overflow-y: auto;
+
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+
+  padding: 1rem;
+  z-index: 1000; /* se pone por encima de géneros */
+}
+
+/* 📑 Lista genérica */
 ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
+/* 📖 Resultados de búsqueda */
 li {
   display: flex;
   align-items: flex-start;
@@ -22,28 +48,26 @@ li {
 }
 
 li img {
+  width: 50px;
+  height: auto;
   flex-shrink: 0;
+  border-radius: 4px;
 }
 
 li div {
   margin-left: 10px;
+  text-align: left;
+}
+
+/* 🎭 Sección de géneros */
+.generos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .genero {
-  padding: 6px 12px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.generos-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
-  gap: 10px; /* espacio entre géneros */
-  margin-top: 10px;
-}
-
-.genero-item {
   padding: 8px 12px;
   border-radius: 6px;
   text-align: center;
@@ -51,6 +75,3 @@ li div {
   transition: background 0.3s;
 }
 
-.genero-item:hover {
-  background: #ddd; /* efecto hover */
-}

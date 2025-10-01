@@ -15,6 +15,7 @@ export class BusquedaLibrosComponent {
   busqueda: string = '';
   resultados: any[] = [];
   private searchTimeout: any;
+  modoGenero: boolean = false;
 
   generos: string[] = [
     'Fantasía', 'Ciencia ficción', 'Romance', 'Misterio', 'Terror',
@@ -30,7 +31,10 @@ export class BusquedaLibrosComponent {
   constructor(private http: HttpClient) {}
 
   buscarLibros() {
+    this.modoGenero = false;
+
     clearTimeout(this.searchTimeout);
+
     this.searchTimeout = setTimeout(() => {
       const consulta = this.busqueda.trim();
 
@@ -59,7 +63,23 @@ export class BusquedaLibrosComponent {
   }
 
   buscarPorGenero(genero: string) {
+    this.modoGenero = true;
     this.busqueda = genero;
-    this.buscarLibros();
+    
+    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(
+      genero
+    )}&key=${this.apiKey}&langRestrict=es`;
+    this.http.get<any>(url).subscribe(response => {
+      this.resultados = (response.items || []).map((item: any) => {
+        const info = item.volumeInfo;
+        return {
+          id: item.id,
+          titulo: info.title,
+          autor: info.authors?.join(', ') || 'Autor desconocido',
+          descripcion: info.description || 'Sin descripción disponible',
+          imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
+        };
+      });       
+    });
   }
 }

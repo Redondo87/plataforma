@@ -1,37 +1,48 @@
-<!--<h2>📚 Búsqueda de Libros</h2> -->
-
 <!-- 🔍 Buscador -->
-<input
-  type="text"
-  placeholder="Buscar un libro..."
-  [(ngModel)]="busqueda"
-  (input)="buscarLibros()"
-/>
+<div class="buscador-container">
+  <input
+    type="text"
+    placeholder="Buscar un libro..."
+    [(ngModel)]="busqueda"
+    (input)="buscarLibros()"
+  />
 
-<!-- 📑 Lista de géneros en horizontal -->
-<h3>Géneros</h3>
-<div class="generos-grid">
-  <span
-    *ngFor="let genero of generos"
-    class="genero"
-    (click)="buscarPorGenero(genero)"
-  >
-    {{ genero }}
-  </span>
+  <!-- 📖 Resultados flotantes -->
+  <div class="resultados-flotantes" *ngIf="!modoGenero && resultados.length > 0">
+    <ul>
+      <li *ngFor="let libro of resultados">
+        <a [routerLink]="['/busqueda-libro', libro.id]">
+          <img [src]="libro.imagen" alt="Portada" />
+        </a>
+        <div>
+          <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
+          <p>{{ libro.descripcion }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<!-- 📖 Resultados -->
-<div *ngIf="resultados.length > 0">
-  <h3>Resultados</h3>
+<!-- 📑 Lista de géneros -->
+<div *ngIf="!modoGenero">
+  <h3>Géneros</h3>
+  <div class="generos-grid">
+    <span
+      *ngFor="let genero of generos"
+      class="genero"
+      (click)="buscarPorGenero(genero)"
+    >
+      {{ genero }}
+    </span>
+  </div>
+</div>
+
+<!-- 📚 Resultados de género -->
+<div *ngIf="modoGenero && resultados.length > 0">
+  <h3>Resultados para "{{ busqueda}}"</h3>
   <ul>
     <li *ngFor="let libro of resultados">
-      <a [routerLink]="['/libro', libro.id]">
-        <img
-          [src]="libro.imagen"
-          alt="Portada"
-          style="width: 60px; margin-right: 10px; cursor: pointer;"
-        />
-      </a>
+        <img [src]="libro.imagen" alt="Portada" />
       <div>
         <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
         <p>{{ libro.descripcion }}</p>
