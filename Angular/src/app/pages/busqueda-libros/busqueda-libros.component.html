@@ -11,7 +11,8 @@
   <div class="resultados-flotantes" *ngIf="!modoGenero && resultados.length > 0">
     <ul>
       <li *ngFor="let libro of resultados">
-        <a [routerLink]="['/libro', libro.id]">
+        <!-- 🔁 CAMBIO AQUÍ -->
+        <a [routerLink]="['/busqueda-libro', libro.id]">
           <img [src]="libro.imagen" alt="Portada" />
         </a>
         <div>
@@ -45,12 +46,13 @@
 
   <ul *ngIf="resultados.length > 0">
     <li *ngFor="let libro of resultados">
-      <a [routerLink]="['/libro', libro.id]">
+      <!-- 🔁 CAMBIO AQUÍ TAMBIÉN -->
+      <a [routerLink]="['/busqueda-libro', libro.id]">
         <img [src]="libro.imagen" alt="Portada" />
       </a>
       <div>
         <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
-        <p>{{ libro.descripcion }}</p>
+           <p>{{ libro.descripcion }}</p>
       </div>
     </li>
   </ul>
