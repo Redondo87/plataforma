@@ -11,7 +11,7 @@
   <div class="resultados-flotantes" *ngIf="!modoGenero && resultados.length > 0">
     <ul>
       <li *ngFor="let libro of resultados">
-        <a [routerLink]="['/busqueda-libro', libro.id]">
+        <a [routerLink]="['/libro', libro.id]">
           <img [src]="libro.imagen" alt="Portada" />
         </a>
         <div>
@@ -38,11 +38,16 @@
 </div>
 
 <!-- 📚 Resultados de género -->
-<div *ngIf="modoGenero && resultados.length > 0">
-  <h3>Resultados para "{{ busqueda}}"</h3>
-  <ul>
+<div *ngIf="modoGenero">
+  <h3>Resultados</h3>
+
+  <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
+
+  <ul *ngIf="resultados.length > 0">
     <li *ngFor="let libro of resultados">
+      <a [routerLink]="['/libro', libro.id]">
         <img [src]="libro.imagen" alt="Portada" />
+      </a>
       <div>
         <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
         <p>{{ libro.descripcion }}</p>
