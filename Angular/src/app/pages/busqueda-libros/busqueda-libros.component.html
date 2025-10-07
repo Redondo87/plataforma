@@ -11,9 +11,12 @@
   <div class="resultados-flotantes" *ngIf="!modoGenero && resultados.length > 0">
     <ul>
       <li *ngFor="let libro of resultados">
-        <!-- 🔁 CAMBIO AQUÍ -->
         <a [routerLink]="['/busqueda-libro', libro.id]">
-          <img [src]="libro.imagen" alt="Portada" />
+          <img
+            [src]="libro.imagen || '/assets/images/imagenNoDisponible.png'"
+            alt="Portada"
+            (error)="reemplazarImagen($event)"
+          />
         </a>
         <div>
           <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
@@ -44,15 +47,19 @@
 
   <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
 
-  <ul *ngIf="resultados.length > 0">
+  <!-- 👇 AQUI SE AGREGA LA CLASE lista-libros -->
+  <ul *ngIf="resultados.length > 0" class="lista-libros">
     <li *ngFor="let libro of resultados">
-      <!-- 🔁 CAMBIO AQUÍ TAMBIÉN -->
       <a [routerLink]="['/busqueda-libro', libro.id]">
-        <img [src]="libro.imagen" alt="Portada" />
+        <img
+          [src]="libro.imagen || '/assets/images/imagenNoDisponible.png'"
+          alt="Portada"
+          (error)="reemplazarImagen($event)"
+        />
       </a>
       <div>
         <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
-           <p>{{ libro.descripcion }}</p>
+        <p>{{ libro.descripcion }}</p>
       </div>
     </li>
   </ul>

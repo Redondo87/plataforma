@@ -21,25 +21,22 @@ input {
   width: 600px;
   max-height: 400px;
   overflow-y: auto;
-
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-
   padding: 1rem;
   z-index: 1000; /* se pone por encima de géneros */
 }
 
-/* 📑 Lista genérica */
-ul {
+/* 📖 Lista de resultados flotantes */
+.resultados-flotantes ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-/* 📖 Resultados de búsqueda */
-li {
+.resultados-flotantes li {
   display: flex;
   align-items: flex-start;
   margin-bottom: 1rem;
@@ -47,19 +44,56 @@ li {
   padding-bottom: 1rem;
 }
 
-li img {
-  width: 50px;
+.resultados-flotantes li img {
+  width: 60px; /* tamaño más pequeño */
   height: auto;
   flex-shrink: 0;
   border-radius: 4px;
+  margin-right: 10px;
+  margin-left: 0;
 }
 
-li div {
-  margin-left: 10px;
+.resultados-flotantes li div {
   text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-/* 🎭 Sección de géneros */
+/* 📖 Lista de libros grandes (principal y por género) */
+.lista-libros {
+  list-style-type: none;
+  padding: 0 40px; /* 🔹 margen lateral interno */
+  margin: 0 auto;  /* 🔹 centra la lista */
+  max-width: 1000px; /* 🔹 evita que se estire demasiado en pantallas grandes */
+}
+
+.lista-libros li {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px; /* 🆕 Espacio entre la imagen y el texto */
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  padding-right: 40px;
+}
+
+
+.lista-libros li img {
+  width: 120px;
+  height: auto;
+  flex-shrink: 0;
+  border-radius: 6px;
+  margin: 0;
+  margin-left: 40px; 
+}
+
+.lista-libros li div {
+  flex: 1; /* ocupa el resto del espacio */
+  text-align: justify;
+  margin-right: 40px; 
+}
+
+/* Sección de géneros */
 .generos-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -74,4 +108,3 @@ li div {
   cursor: pointer;
   transition: background 0.3s;
 }
-

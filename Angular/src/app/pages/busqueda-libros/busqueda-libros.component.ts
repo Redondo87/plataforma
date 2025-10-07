@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import * as he from 'he';
 
 @Component({
   selector: 'app-busqueda-libros',
@@ -56,7 +57,7 @@ export class BusquedaLibrosComponent {
             id: item.id,
             titulo: info.title,
             autor: info.authors?.join(', ') || 'Autor desconocido',
-            descripcion: info.description || 'Sin descripción disponible',
+            descripcion: this.limpiarTexto(info.description || 'Sin descripción disponible'),
             imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
           };
         });
@@ -86,10 +87,19 @@ export class BusquedaLibrosComponent {
           id: item.id,
           titulo: info.title,
           autor: info.authors?.join(', ') || 'Autor desconocido',
-          descripcion: info.description || 'Sin descripción disponible',
+          descripcion: this.limpiarTexto(info.description || 'Sin descripción disponible'),
           imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
         };
       });
     });
   }
+limpiarTexto(texto: string): string {
+  if (!texto) return texto;
+  return he.decode(texto).replace(/�/g, ' ').trim();
+}
+reemplazarImagen(event: Event) {
+  const target = event.target as HTMLImageElement;
+  target.src = '/assets/images/imagenNoDisponible.png';
+}
+
 }
