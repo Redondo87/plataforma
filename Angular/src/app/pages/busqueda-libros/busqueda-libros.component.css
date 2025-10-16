@@ -108,3 +108,46 @@ input {
   cursor: pointer;
   transition: background 0.3s;
 }
+@media (max-width: 768px) {
+  /* Buscador */
+  input {
+    width: 80%; /* se adapta al ancho de la pantalla */
+  }
+
+  .resultados-flotantes {
+    width: 90%; /* se adapta al contenedor */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Lista de libros */
+  .lista-libros li {
+    flex-direction: column; /* apila imagen y texto */
+    align-items: center;
+    padding-right: 0;
+    gap: 10px;
+  }
+
+  .lista-libros li img {
+    width: 60%; /* imagen más pequeña en móviles */
+    margin-left: 0;
+  }
+
+  .lista-libros li div {
+    margin-right: 0;
+    text-align: center; 
+  }
+
+  /* Sección de géneros */
+  .generos-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet/móvil */
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ajuste extra para móviles muy pequeños */
+  .generos-grid {
+    grid-template-columns: 1fr; /* 1 columna en móvil pequeño */
+  }
+}

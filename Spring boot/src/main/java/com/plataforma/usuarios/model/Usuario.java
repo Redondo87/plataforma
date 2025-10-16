@@ -1,14 +1,16 @@
 package com.plataforma.usuarios.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
-    private String nombre; // Clave primaria
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nombre; 
     private String email;
     private String contrasena;
 
@@ -19,7 +21,15 @@ public class Usuario {
         this.email = email;
         this.contrasena = contrasena;
     }
-
+    
+    public Long getId(){
+        return id;
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
     public String getNombre() {
         return nombre;
     }

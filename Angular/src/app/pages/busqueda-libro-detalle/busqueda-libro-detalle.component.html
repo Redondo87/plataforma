@@ -1,12 +1,48 @@
-<div *ngIf="libro; else cargando" class="detalle-libro">
+
+<div *ngIf="libro" class="detalle-libro">
   <h2>{{ libro.titulo }}</h2>
-  <img [src]="libro.imagen" alt="Portada" />
-  <p><strong>Autor:</strong> {{ libro.autor }}</p>
-  <strong>Descripción:</strong> <p [innerHTML]="libro.descripcion"></p>
+
+  <div class="contenido-libro">
+    <div class="imagen">
+      <img
+        [src]="libro.imagen || '/assets/images/imagenNoDisponible.png'"
+        alt="Portada"
+        (error)="reemplazarImagen($event)"
+      />
+    </div>
+
+    <div class="descripcion">
+      <p><strong>Autor:</strong> {{ libro.autor }}</p>
+      <strong>Descripción:</strong>
+      <p [innerHTML]="libro.descripcion"></p>
+    </div>
+  </div>
+
+  <div class="boton-centro">
+    <button (click)="abrirModal()">Añadir a mi lista</button>
+  </div>
 </div>
 
-<ng-template #cargando>
-  <p>Cargando detalles del libro...</p>
-</ng-template>
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal">
+    <h3>{{ libro.titulo }}</h3>
 
-<button >Añadir a mi lista</button>
+    <label>Estado:</label>
+    <select [(ngModel)]="estadoSeleccionado">
+      <option value="lectura">Lectura</option>
+      <option value="terminado">Terminado</option>
+      <option value="en espera">En espera</option>
+      <option value="abandonado">Abandonado</option>
+      <option value="plan para leer">Plan para leer</option>
+    </select>
+
+    <label>Puntuación:</label>
+    <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+
+    <div class="modal-buttons">
+      <button (click)="guardarLibro()">Guardar</button>
+      <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
