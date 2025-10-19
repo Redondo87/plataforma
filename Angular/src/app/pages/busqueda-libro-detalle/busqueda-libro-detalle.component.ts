@@ -45,7 +45,7 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   cerrarModal() { this.mostrarModal = false; }
 
   guardarLibro() {
-    localStorage.setItem('usuarioId', '3'); 
+   
     const usuarioId = Number(localStorage.getItem('usuarioId')); 
     if (!usuarioId) {
       alert('Debes iniciar sesión para añadir libros.');

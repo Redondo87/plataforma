@@ -62,10 +62,11 @@ export class AppComponent {
   }
 
   cerrarSesion() {
-    this.usuarioLogueado = false;
-    this.nombreUsuario = '';
-  }
-
+  this.usuarioLogueado = false;
+  this.nombreUsuario = '';
+  localStorage.removeItem('usuarioId');
+  localStorage.removeItem('usuarioNombre');
+}
   // Búsqueda de libros (mínimo 3 caracteres)
   buscarLibros() {
     const consulta = this.busquedaLibros.trim();
@@ -147,13 +148,32 @@ export class AppComponent {
     });
   }
 
-  // Login (simulado)
-  loginUsuario() {
-    this.usuarioLogueado = true;
-    this.nombreUsuario = this.registroNombre;
-    this.showLoginForm = false;
-    this.clearForm();
-  }
+// Login
+loginUsuario() {
+  const credenciales = {
+    email: this.registroEmail,
+    contrasena: this.registroPassword
+  };
+
+  this.usuarioService.http.post('http://localhost:8080/api/usuarios/login', credenciales)
+    .subscribe({
+      next: (usuario: any) => {
+        localStorage.setItem('usuarioId', usuario.id.toString());
+        localStorage.setItem('usuarioNombre', usuario.nombre);
+
+        this.usuarioLogueado = true;
+        this.nombreUsuario = usuario.nombre;
+        this.showLoginForm = false;
+
+        this.clearForm();
+      },
+      error: err => {
+        console.error('Error en login:', err);
+        alert('Credenciales incorrectas o usuario no encontrado.');
+      }
+    });
+}
+
 
   // Limpiar campos
   private clearForm() {
