@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service'; // ✅ Importamos AuthService
 
 @Component({
   selector: 'app-busqueda-libro-detalle',
@@ -13,16 +14,24 @@ import { FormsModule } from '@angular/forms';
 })
 export class BusquedaLibroDetalleComponent implements OnInit {
   libro: any = null;
+  libroSeleccionado: any = null; // ✅ añadida
   mostrarModal = false;
   estadoSeleccionado = 'lectura';
   puntuacion: number = 1;
 
+  estaLogueado = false; // ✅ Nueva variable
+
   private apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
   private apiUrl = 'http://localhost:8080/api/libros-usuarios';
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private authService: AuthService // ✅ Inyectamos AuthService
+  ) {}
 
   ngOnInit() {
+    this.estaLogueado = this.authService.estaLogueado(); // ✅ Verificamos login
     const id = this.route.snapshot.paramMap.get('id');
     if (id) this.obtenerLibro(id);
   }
@@ -41,12 +50,22 @@ export class BusquedaLibroDetalleComponent implements OnInit {
     });
   }
 
-  abrirModal() { this.mostrarModal = true; }
-  cerrarModal() { this.mostrarModal = false; }
+  abrirModal() {
+  if (!this.authService.estaLogueado()) {
+    alert('Debes iniciar sesión para añadir libros.');
+    return;
+  }
+
+  this.mostrarModal = true;
+}
+
+
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
 
   guardarLibro() {
-   
-    const usuarioId = Number(localStorage.getItem('usuarioId')); 
+    const usuarioId = this.authService.getUsuarioId();
     if (!usuarioId) {
       alert('Debes iniciar sesión para añadir libros.');
       return;

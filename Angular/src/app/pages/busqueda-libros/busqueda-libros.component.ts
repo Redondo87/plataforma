@@ -74,14 +74,25 @@ export class BusquedaLibrosComponent {
       genero
     )}&key=${this.apiKey}&langRestrict=es`;
 
-    this.http.get<any>(url).subscribe(response => {
+      this.http.get<any>(url).subscribe(response => {
       if (!response.items || response.items.length === 0) {
         this.resultados = [];
         this.mensaje = `No se encontraron libros en el género "${genero}".`;
         return;
       }
 
-      this.resultados = response.items.map((item: any) => {
+      // 🔹 Filtrar solo los libros cuyo idioma sea español
+      const librosFiltrados = response.items.filter(
+        (item: any) => item.volumeInfo?.language === 'es'
+      );
+
+      if (librosFiltrados.length === 0) {
+        this.resultados = [];
+        this.mensaje = `No se encontraron libros en español en el género "${genero}".`;
+        return;
+      }
+
+      this.resultados = librosFiltrados.map((item: any) => {
         const info = item.volumeInfo;
         return {
           id: item.id,
@@ -93,13 +104,14 @@ export class BusquedaLibrosComponent {
       });
     });
   }
-limpiarTexto(texto: string): string {
-  if (!texto) return texto;
-  return he.decode(texto).replace(/�/g, ' ').trim();
-}
-reemplazarImagen(event: Event) {
-  const target = event.target as HTMLImageElement;
-  target.src = '/assets/images/imagenNoDisponible.png';
-}
+
+  limpiarTexto(texto: string): string {
+    if (!texto) return texto;
+    return he.decode(texto).replace(/�/g, ' ').trim();
+  }
+  reemplazarImagen(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = '/assets/images/imagenNoDisponible.png';
+  }
 
 }

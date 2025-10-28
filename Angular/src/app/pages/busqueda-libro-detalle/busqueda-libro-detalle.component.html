@@ -19,7 +19,9 @@
   </div>
 
   <div class="boton-centro">
-    <button (click)="abrirModal()">Añadir a mi lista</button>
+    <button (click)="abrirModal()">
+      Añadir a mi lista
+    </button>
   </div>
 </div>
 
@@ -28,17 +30,23 @@
   <div class="modal">
     <h3>{{ libro.titulo }}</h3>
 
-    <label>Estado:</label>
-    <select [(ngModel)]="estadoSeleccionado">
-      <option value="lectura">Lectura</option>
-      <option value="terminado">Terminado</option>
-      <option value="en espera">En espera</option>
-      <option value="abandonado">Abandonado</option>
-      <option value="plan para leer">Plan para leer</option>
-    </select>
+    <div class="campos-horizontal">
+      <div class="campo-horizontal">
+        <label>Estado:</label>
+        <select [(ngModel)]="estadoSeleccionado">
+          <option value="lectura">Lectura</option>
+          <option value="terminado">Terminado</option>
+          <option value="en espera">En espera</option>
+          <option value="abandonado">Abandonado</option>
+          <option value="plan para leer">Plan para leer</option>
+        </select>
+      </div>
 
-    <label>Puntuación:</label>
-    <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+      <div class="campo-horizontal">
+        <label>Puntuación:</label>
+        <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+      </div>
+    </div>
 
     <div class="modal-buttons">
       <button (click)="guardarLibro()">Guardar</button>

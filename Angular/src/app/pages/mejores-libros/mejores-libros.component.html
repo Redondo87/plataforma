@@ -1,0 +1,65 @@
+<div class="mejores-libros-container">
+  <table class="table-ranking" *ngIf="mejoresLibros.length > 0">
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>Título</th>
+        <th>Puntuación promedio</th>
+        <th>Tu puntuación</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let libro of mejoresLibros">
+        <td>{{ libro.ranking }}</td>
+        <td class="titulo-imagen">
+          <img [src]="libro.imagen" alt="{{ libro.titulo }}" style="height:50px; margin-right:5px;" />
+          {{ libro.titulo }}
+        </td>
+        <td>{{ libro.promedio | number: '1.1-2' }}</td>
+        <td>{{ libro.miPuntuacion || '-' }}</td>
+        <td>
+          <button 
+            [disabled]="!estaLogueado"
+            [title]="!estaLogueado ? 'Inicia sesión para añadir libros' : ''"
+            (click)="abrirModal(libro)">
+            Añadir a mi lista
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="cargando" class="loading">Cargando...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal">
+    <h3>{{ libroSeleccionado?.titulo }}</h3>
+
+    <div class="campos-horizontal">
+      <div class="campo-horizontal">
+        <label>Estado:</label>
+        <select [(ngModel)]="estadoSeleccionado">
+          <option value="lectura">Lectura</option>
+          <option value="terminado">Terminado</option>
+          <option value="en espera">En espera</option>
+          <option value="abandonado">Abandonado</option>
+          <option value="plan para leer">Plan para leer</option>
+        </select>
+      </div>
+
+      <div class="campo-horizontal">
+        <label>Puntuación:</label>
+        <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button (click)="guardarLibro()">Añadir a mi lista</button>
+      <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

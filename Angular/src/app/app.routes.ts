@@ -4,6 +4,7 @@ import { SerieDetalleComponent } from './pages/serie-detalle/serie-detalle.compo
 import { HomePageComponent } from './pages/home-page.component';
 import { BusquedaLibrosComponent } from './pages/busqueda-libros/busqueda-libros.component';
 import { BusquedaLibroDetalleComponent } from './pages/busqueda-libro-detalle/busqueda-libro-detalle.component';
+import { MejoresLibrosComponent } from './pages/mejores-libros/mejores-libros.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,9 @@ export const routes: Routes = [
 
   { path: 'busqueda-libro/:id', 
     component: BusquedaLibroDetalleComponent
-  }
+  },
+
+  { path: 'mejores-libros', 
+    component: MejoresLibrosComponent
+  },
 ];
