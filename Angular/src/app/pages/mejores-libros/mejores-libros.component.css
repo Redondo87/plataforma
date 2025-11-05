@@ -17,7 +17,7 @@
 .table-ranking th,
 .table-ranking td {
   padding: 0.8rem 1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 
@@ -26,6 +26,25 @@
   font-weight: 600;
 }
 
+/* ✅ Imagen y título alineados a la izquierda */
+.table-ranking .titulo-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.8rem;
+  text-align: left !important;
+}
+
+.table-ranking .titulo-imagen img {
+  width: 60px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  margin-right: 10px;
+}
+
+/* Botón principal */
 .table-ranking td button {
   background-color: #5cb85c;
   color: white;
@@ -38,6 +57,14 @@
 
 .table-ranking td button:hover {
   background-color: #4cae4c;
+}
+
+/* Deshabilitado */
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  border: 1px solid #aaa;
 }
 
 /* Mensajes */
@@ -75,25 +102,57 @@
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
+/* ✅ Campos en una sola línea */
+.campos-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.campo-horizontal {
+  flex: 1;
+}
+
 .modal label {
   display: block;
-  margin-top: 1rem;
   font-weight: 500;
+  margin-bottom: 0.4rem;
 }
 
 .modal select,
 .modal input[type="number"] {
   width: 100%;
   padding: 0.4rem;
-  margin-top: 0.3rem;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
+/* ✅ Botones del modal */
 .modal-buttons { 
   margin-top: 1.5rem; 
   display: flex; 
   justify-content: space-between; 
+}
+
+.modal-buttons button {
+  flex: 1;
+  margin: 0 0.5rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-buttons button:first-child {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #4cae4c;
 }
 
 .modal-buttons .cancelar { 
@@ -101,6 +160,11 @@
   color: black; 
 }
 
+.modal-buttons .cancelar:hover {
+  background-color: #b3b3b3;
+}
+
+/* Responsive */
 @media screen and (max-width: 600px) {
   .table-ranking th, .table-ranking td {
     padding: 0.5rem;
@@ -111,11 +175,9 @@
     width: 90%;
     padding: 1.5rem;
   }
-}
 
-button:disabled {
-  background-color: #ccc;
-  color: #666;
-  cursor: not-allowed;
-  border: 1px solid #aaa;
+  .campos-horizontal {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
