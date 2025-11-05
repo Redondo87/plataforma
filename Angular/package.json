@@ -28,6 +28,7 @@
     "rxjs": "~7.8.0",
     "tmp": "^0.2.3",
     "tslib": "^2.8.1",
+    "vite": "^6.4.1",
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
@@ -46,7 +47,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.2",
-    "vite": "^7.2.0"
+    "typescript": "~5.7.2"
   }
 }
