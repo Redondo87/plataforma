@@ -1,0 +1,50 @@
+<div class="buscador-container">
+
+  <!-- 🔍 Barra de búsqueda -->
+  <input
+    type="text"
+    placeholder="Buscar series o películas..."
+    [(ngModel)]="terminoBusqueda"
+    (input)="filtrarResultados()"
+  />
+
+  <!-- 🏷️ Título de géneros -->
+  <h3 class="titulo-generos">Géneros</h3>
+
+  <!-- 🎭 Lista de géneros -->
+  <div class="generos-grid">
+    <div
+      *ngFor="let genero of generos"
+      class="genero"
+      (click)="filtrarPorGenero(genero)"
+    >
+      {{ genero }}
+    </div>
+  </div>
+
+  <!-- 🎬 Resultados -->
+  <div class="resultados">
+    <div
+      class="card"
+      *ngFor="let item of resultadosFiltrados"
+      (click)="abrirModal(item)"
+    >
+      <img [src]="item.portada" alt="Portada" />
+      <h3>{{ item.titulo }}</h3>
+      <p class="creadores">{{ item.creadores }}</p>
+      <p class="descripcion">{{ item.descripcion | slice: 0:100 }}...</p>
+    </div>
+  </div>
+
+  <!-- 💬 Cuadro flotante (modal) -->
+  <div class="modal" *ngIf="itemSeleccionado" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <img [src]="itemSeleccionado.portada" alt="Portada" />
+      <h2>{{ itemSeleccionado.titulo }}</h2>
+      <p><strong>Creadores:</strong> {{ itemSeleccionado.creadores }}</p>
+      <p>{{ itemSeleccionado.descripcion }}</p>
+      <button class="btn-cerrar" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+
+</div>
