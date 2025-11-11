@@ -1,0 +1,25 @@
+<div class="detalle-container" *ngIf="detalle">
+  
+  <!-- Título centrado -->
+  <h2 class="detalle-titulo">{{ detalle.titulo }}</h2>
+
+  <div class="detalle-card">
+    <!-- Columna izquierda: Imagen -->
+    <div class="detalle-imagen">
+      <img [src]="detalle.portada" alt="{{ detalle.titulo }}" />
+    </div>
+
+    <!-- Columna derecha: Info -->
+    <div class="detalle-info">
+      <p><strong>Géneros:</strong> {{ detalle.generos }}</p>
+      <p><strong>Fecha:</strong> {{ detalle.fecha }}</p>
+      <p><strong>Creadores:</strong> {{ detalle.creadores }}</p>
+      <p><strong>Descripción:</strong></p>
+      <p class="descripcion">{{ detalle.descripcion }}</p>
+
+      <div class="acciones">
+        <button class="btn-lista" (click)="anadirAMiLista()">Añadir a mi lista</button>
+      </div>
+    </div>
+  </div>
+</div>

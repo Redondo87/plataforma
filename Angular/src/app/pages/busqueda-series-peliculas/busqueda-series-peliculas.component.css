@@ -164,3 +164,60 @@ input {
     font-size: 13px;
   }
 }
+
+/* 🔹 Cuadro flotante de sugerencias (tiempo real) */
+.resultados-flotantes {
+  position: absolute;
+  top: 40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px; 
+  max-height: 400px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.resultados-flotantes ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sugerencia-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.sugerencia-item img {
+  width: 60px;
+  border-radius: 4px;
+}
+
+.sugerencia-texto {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.sugerencia-titulo {
+  font-weight: bold;
+  color: #333;
+}
+
+.sugerencia-sub {
+  font-size: 12px;
+  color: #555;
+}
+
+.sugerencia-descripcion {
+  font-size: 12px;
+  color: #333;
+  margin-top: 4px;
+}
