@@ -24,11 +24,11 @@
     </ul>
   </div>
 
-  <!-- Título de géneros -->
-  <h3 class="titulo-generos">Géneros</h3>
+  <!-- Título de géneros (solo si NO hay uno seleccionado) -->
+  <h3 class="titulo-generos" *ngIf="!generoSeleccionado">Géneros</h3>
 
-  <!-- Lista de géneros -->
-  <div class="generos-grid">
+  <!-- Lista de géneros (solo visible si NO hay uno seleccionado) -->
+  <div class="generos-grid" *ngIf="!generoSeleccionado">
     <div
       *ngFor="let genero of generos"
       class="genero"
@@ -39,8 +39,9 @@
     </div>
   </div>
 
-  <!-- Resultados principales -->
-  <div class="resultados">
+  <!-- Resultados filtrados por género o búsqueda -->
+  <div class="resultados" *ngIf="resultadosFiltrados.length > 0">
+    <h3 class="titulo-resultados">Resultados</h3>
     <div class="card" *ngFor="let item of resultadosFiltrados" (click)="abrirModal(item)">
       <img [src]="item.portada" alt="Portada" />
       <h3>{{ item.titulo }}</h3>
@@ -49,6 +50,7 @@
     </div>
   </div>
 
+  <!-- Modal emergente -->
   <div class="modal" *ngIf="itemSeleccionado" (click)="cerrarModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <img [src]="itemSeleccionado.portada" alt="Portada" />

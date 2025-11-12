@@ -1,76 +1,207 @@
-.detalle-container {
+/* Contenedor principal */
+.buscador-container {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
-  margin-left: 200px; /* 🔹 mueve todo a la derecha */
+  align-items: flex-start;
 }
 
-.detalle-titulo {
-  text-align: center;
+/* Barra de búsqueda */
+.barra-busqueda {
   width: 100%;
-  font-size: 28px;
+  max-width: 500px;
+  padding: 8px 12px;
   margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-.detalle-card {
+/* Sugerencias flotantes */
+.resultados-flotantes {
+  position: absolute;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  width: 500px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.resultados-flotantes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sugerencia-item {
   display: flex;
-  gap: 20px;
-  max-width: 900px;
-  padding: 0; /* quitamos el padding del cuadro */
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
 }
 
-.detalle-imagen img {
-  width: 250px; /* más pequeña */
-  height: auto;
-  border-radius: 10px;
+.sugerencia-item img {
+  width: 50px;
+  height: 75px;
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
-.detalle-info {
-  flex: 1;
-  min-width: 260px;
+.sugerencia-texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.detalle-info p {
-  margin: 8px 0;
-  color: #444;
-  line-height: 1.4;
+.sugerencia-titulo {
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-.descripcion {
-  margin-top: 5px;
+.sugerencia-sub {
+  font-size: 12px;
+  color: #666;
 }
 
-.acciones {
+.sugerencia-descripcion {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Títulos */
+.titulo-generos {
+  text-align: left;
+  margin-left: 10px;
   margin-top: 20px;
-  display: flex;
-  justify-content: center; /* botón centrado */
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
 }
 
-.btn-lista {
+.titulo-resultados {
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Contenedor de géneros */
+.generos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.genero {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #eee;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.genero.activo,
+.genero:hover {
   background: #5cb85c;
   color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s ease;
 }
 
-.btn-lista:hover {
-  background: #4cae4c;
+/* Contenedor de resultados */
+.resultados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 5px;
+  justify-content: flex-start;
+}
+
+/* Tarjetas individuales */
+.card {
+  width: 180px;
+  padding: 10px;
+  border-radius: 6px;
+  background: white;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.card h3 {
+  font-size: 15px;
+  margin: 8px 0 4px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #555;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.btn-cerrar {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #d9534f;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-cerrar:hover {
+  background: #c9302c;
 }
 
 /* Responsividad */
 @media (max-width: 768px) {
-  .detalle-card {
-    flex-direction: column;
-    align-items: center;
+  .buscador-container {
+    margin-left: 0;
   }
-  .detalle-imagen img {
-    width: 80%;
+  .barra-busqueda,
+  .resultados-flotantes {
+    width: 100%;
   }
-  .detalle-info {
-    text-align: center;
+  .card {
+    width: 45%;
   }
 }
