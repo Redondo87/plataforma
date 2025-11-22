@@ -30,22 +30,53 @@ CREATE TABLE IF NOT EXISTS `libros_usuarios` (
   PRIMARY KEY (`id`),
   KEY `libros_usuarios_ibfk_1` (`usuario_id`),
   CONSTRAINT `libros_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Volcando datos para la tabla plataforma.libros_usuarios: ~10 rows (aproximadamente)
+REPLACE INTO `libros_usuarios` (`id`, `usuario_id`, `libro_id`, `estado`, `puntuacion`, `fecha_creacion`) VALUES
+	(2, 1, 'MzbHg3L4JuIC', 'terminado', 9, '2025-10-19 19:20:18'),
+	(3, 1, 'lopEEQAAQBAJ', 'lectura', 8, '2025-10-20 15:36:30'),
+	(4, 1, 'zobzEAAAQBAJ', 'terminado', 7, '2025-10-22 17:48:42'),
+	(5, 1, 'zobzEAAAQBAJ', 'terminado', 7, '2025-10-23 13:55:55'),
+	(6, 1, 'AC-REAAAQBAJ', 'plan para leer', 7, '2025-10-23 17:37:10'),
+	(7, 1, 'eCW5EAAAQBAJ', 'terminado', 9, '2025-10-23 17:59:58'),
+	(8, 2, 'awl0DwAAQBAJ', 'lectura', 7, '2025-10-29 19:23:44'),
+	(9, 2, 'AC-REAAAQBAJ', 'plan para leer', 8, '2025-10-29 19:24:35'),
+	(10, 1, 'zttSEAAAQBAJ', 'terminado', 9, '2025-11-04 19:06:50'),
+	(11, 1, 'ujnRDgAAQBAJ', 'terminado', 9, '2025-11-05 19:07:37');
+
+-- Volcando estructura para tabla plataforma.series_usuarios
+CREATE TABLE IF NOT EXISTS `series_usuarios` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `usuario_id` bigint(20) unsigned NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `tipo` varchar(255) DEFAULT NULL,
+  `estado` varchar(30) NOT NULL,
+  `puntuacion` int(11) DEFAULT NULL,
+  `temporada` int(11) DEFAULT NULL,
+  `capitulo` int(11) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `series_usuarios_ibfk_1` (`usuario_id`),
+  CONSTRAINT `series_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.libros_usuarios: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.series_usuarios: ~0 rows (aproximadamente)
 
 -- Volcando estructura para tabla plataforma.usuario
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `nombre` varchar(255) NOT NULL,
   `contrasena` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.usuario: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.usuario: ~2 rows (aproximadamente)
 REPLACE INTO `usuario` (`id`, `nombre`, `contrasena`, `email`) VALUES
-	(3, 'Ana', 'Ana2025?', 'ana@gmail.com');
+	(1, 'Ana', '$2a$10$4ICZdK4cS6RE7cRasATWV.bfxNO/LcaYYxL1B1NeV13eY9c7Y2Hcq', 'ana@gmail.com'),
+	(2, 'Raul', '$2a$10$oHtdxkjPPNpqCO5TEGOS7etXqZFyEwquWnVoHku5QNDjwVUY8LyN6', 'raulga@gmail.com');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -11,54 +11,85 @@
   />
 
   <!-- Cuadro flotante de sugerencias -->
-  <div class="resultados-flotantes" *ngIf="mostrarSugerencias && sugerencias.length > 0">
+  <div class="resultados-flotantes" *ngIf="sugerencias.length > 0">
     <ul>
-      <li *ngFor="let s of sugerencias" (click)="irADetalle(s)" class="sugerencia-item">
+      <li *ngFor="let s of sugerencias" (click)="irADetalle(s); $event.stopPropagation()">
         <img [src]="s.portada" alt="{{ s.titulo }}" />
-        <div class="sugerencia-texto">
-          <strong class="sugerencia-titulo">{{ s.titulo }}</strong>
-          <div class="sugerencia-sub">{{ s.creadores }}</div>
-          <div class="sugerencia-descripcion">{{ s.descripcion }}</div>
+        <div>
+          <strong>{{ s.titulo }}</strong>
+          <div>{{ s.creadores }}</div>
+          <div>{{ s.descripcion }}</div>
         </div>
       </li>
     </ul>
   </div>
 
-  <!-- Título de géneros (solo si NO hay uno seleccionado) -->
-  <h3 class="titulo-generos" *ngIf="!generoSeleccionado">Géneros</h3>
-
-  <!-- Lista de géneros (solo visible si NO hay uno seleccionado) -->
-  <div class="generos-grid" *ngIf="!generoSeleccionado">
-    <div
-      *ngFor="let genero of generos"
-      class="genero"
-      (click)="filtrarPorGenero(genero)"
-      [class.activo]="generoSeleccionado === genero"
-    >
-      {{ genero }}
-    </div>
+  <!-- Lista de géneros -->
+  <div class="generos-grid" *ngIf="mostrarGeneros">
+  <div
+    *ngFor="let genero of generosTMDB"
+    class="genero"
+    (click)="filtrarPorGenero(genero)"
+    [class.activo]="generoSeleccionado === genero"
+  >
+    {{ genero }}
   </div>
+</div>
 
-  <!-- Resultados filtrados por género o búsqueda -->
-  <div class="resultados" *ngIf="resultadosFiltrados.length > 0">
-    <h3 class="titulo-resultados">Resultados</h3>
+  <!-- Tarjetas de resultados -->
+  <div class="resultados">
     <div class="card" *ngFor="let item of resultadosFiltrados" (click)="abrirModal(item)">
-      <img [src]="item.portada" alt="Portada" />
-      <h3>{{ item.titulo }}</h3>
-      <p class="creadores">{{ item.creadores }}</p>
-      <p class="descripcion">{{ item.descripcion }}</p>
+      <img
+        [src]="item.portada"
+        alt="Portada"
+        (click)="irADetalle(item); $event.stopPropagation()"
+      />
+      <div class="card-text">
+        <h3>{{ item.titulo }}</h3>
+        <p class="creadores">{{ item.creadores }}</p>
+        <p class="descripcion">{{ item.descripcion }}</p>
+      </div>
     </div>
   </div>
 
-  <!-- Modal emergente -->
+  <!-- MODAL DETALLE -->
   <div class="modal" *ngIf="itemSeleccionado" (click)="cerrarModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <img [src]="itemSeleccionado.portada" alt="Portada" />
-      <h2>{{ itemSeleccionado.titulo }}</h2>
-      <p><strong>Tipo:</strong> {{ itemSeleccionado.media_type }}</p>
-      <p>{{ itemSeleccionado.descripcion }}</p>
-      <button class="btn-cerrar" (click)="cerrarModal()">Cerrar</button>
+    <div class="modal-content detalle-card" (click)="$event.stopPropagation()">
+      <div class="detalle-imagen">
+        <img [src]="itemSeleccionado.portada" alt="Portada" />
+      </div>
+
+      <div class="detalle-info">
+        <h2 class="detalle-titulo">{{ itemSeleccionado.titulo }}</h2>
+        <p><strong>Tipo:</strong> {{ itemSeleccionado.media_type }}</p>
+        <p class="descripcion">{{ itemSeleccionado.descripcion }}</p>
+
+        <div class="acciones">
+          <label>Estado:</label>
+          <select [(ngModel)]="estadoSeleccionado">
+            <option value="viendo">Viendo</option>
+            <option value="terminado">Terminado</option>
+            <option value="en espera">En espera</option>
+            <option value="abandonado">Abandonado</option>
+            <option value="plan para ver">Plan para ver</option>
+          </select>
+
+          <label>Puntuación:</label>
+          <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+
+          <!-- Para series: temporada y capítulo -->
+          <div *ngIf="itemSeleccionado.media_type === 'serie'">
+            <label>Temporada:</label>
+            <input type="number" [(ngModel)]="temporada" min="1" />
+
+            <label>Capítulo:</label>
+            <input type="number" [(ngModel)]="capitulo" min="1" />
+          </div>
+
+          <button (click)="guardarItem()">Guardar</button>
+          <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+        </div>
+      </div>
     </div>
   </div>
-
 </div>

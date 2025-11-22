@@ -1,25 +1,70 @@
-<div class="detalle-container" *ngIf="detalle">
-  
-  <!-- Título centrado -->
-  <h2 class="detalle-titulo">{{ detalle.titulo }}</h2>
+<div *ngIf="item" class="detalle-serie">
+  <h2>{{ item.title || item.name }}</h2>
 
-  <div class="detalle-card">
-    <!-- Columna izquierda: Imagen -->
-    <div class="detalle-imagen">
-      <img [src]="detalle.portada" alt="{{ detalle.titulo }}" />
+  <div class="contenido-serie">
+    <div class="imagen">
+      <img
+        [src]="posterUrl"
+        alt="Poster"
+        (error)="reemplazarImagen($event)"
+      />
     </div>
 
-    <!-- Columna derecha: Info -->
-    <div class="detalle-info">
-      <p><strong>Géneros:</strong> {{ detalle.generos }}</p>
-      <p><strong>Fecha:</strong> {{ detalle.fecha }}</p>
-      <p><strong>Creadores:</strong> {{ detalle.creadores }}</p>
+    <div class="descripcion">
       <p><strong>Descripción:</strong></p>
-      <p class="descripcion">{{ detalle.descripcion }}</p>
+      <p>{{ item.overview || 'Sin descripción disponible.' }}</p>
+    </div>
+  </div>
 
-      <div class="acciones">
-        <button class="btn-lista" (click)="anadirAMiLista()">Añadir a mi lista</button>
+  <div class="boton-centro">
+    <button (click)="abrirModal()">
+      Añadir a mi lista
+    </button>
+  </div>
+</div>
+
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal">
+
+    <h3>{{ item.title || item.name }}</h3>
+
+    <!-- SOLO para series -->
+    <div *ngIf="esSerie" class="campos-horizontal">
+      <div class="campo-horizontal">
+        <label>Temporada:</label>
+        <input type="number" [(ngModel)]="temporada" min="1">
+      </div>
+
+      <div class="campo-horizontal">
+        <label>Capítulo:</label>
+        <input type="number" [(ngModel)]="capitulo" min="1">
       </div>
     </div>
+
+    <div class="campos-horizontal">
+      <div class="campo-horizontal">
+        <label>Estado:</label>
+        <select [(ngModel)]="estadoSeleccionado">
+          <option value="viendo">Viendo</option>
+          <option value="terminado">Terminado</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="abandonado">Abandonado</option>
+          <option value="plan para ver">Plan para ver</option>
+        </select>
+      </div>
+
+      <div class="campo-horizontal">
+        <label>Puntuación:</label>
+        <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button (click)="guardarItem()">Guardar</button>
+      <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+
   </div>
 </div>

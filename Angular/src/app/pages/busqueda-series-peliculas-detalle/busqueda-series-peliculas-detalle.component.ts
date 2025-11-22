@@ -1,75 +1,110 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-busqueda-series-peliculas-detalle',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './busqueda-series-peliculas-detalle.component.html',
   styleUrls: ['./busqueda-series-peliculas-detalle.component.css']
 })
 export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
-  detalle: any = null;
-  tipo: string = '';
-  id: string = '';
-  apiKey: string = '218315c8512d576a1f186b27b8d7538e';
-  baseUrl: string = 'https://api.themoviedb.org/3';
+
+  item: any;
+  posterUrl: string = '';
+
+  mostrarModal = false;
+  estadoSeleccionado = 'viendo';
+  puntuacion = 1;
+
+  esSerie = false; 
+  temporada: number = 1;
+  capitulo: number = 1;
+
+  private apiUrl = 'http://localhost:8080/api/series-usuarios';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.tipo = this.route.snapshot.paramMap.get('tipo') || 'movie';
-    this.id = this.route.snapshot.paramMap.get('id') || '';
-    if (this.id) {
-      this.cargarDetalle();
+    const id = this.route.snapshot.paramMap.get('id');
+    const tipo = this.route.snapshot.paramMap.get('tipo'); // 'serie' o 'pelicula'
+
+    this.esSerie = tipo === 'serie';
+
+    if (id && tipo) {
+      this.obtenerDetalles(id, tipo);
     }
   }
 
-  cargarDetalle(): void {
-  const url = `${this.baseUrl}/${this.tipo}/${this.id}?api_key=${this.apiKey}&language=es-ES&append_to_response=credits`;
-  this.http.get<any>(url).subscribe({
-    next: data => {
-      const creadores =
-        (data.credits?.crew || [])
-          .filter((c: any) => /creator|director|writer/i.test(c.job || c.department || ''))
-          .slice(0, 3)
-          .map((c: any) => c.name)
-          .join(', ') ||
-        (data.created_by ? data.created_by.map((c: any) => c.name).join(', ') : 'Desconocido');
+  obtenerDetalles(id: string, tipo: string) {
+    const api_key = '218315c8512d576a1f186b27b8d7538e';
 
-      this.detalle = {
-        titulo: data.title || data.name || 'Sin título',
-        descripcion: data.overview || 'Sin descripción disponible.',
-        portada: data.poster_path
-          ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-          : 'assets/no-image.jpg',
-        generos: (data.genres || []).map((g: any) => g.name).join(', ') || 'N/A',
-        fecha: data.release_date || data.first_air_date || 'Desconocida',
-        creadores
-      };
+    const url = tipo === 'serie'
+      ? `https://api.themoviedb.org/3/tv/${id}?api_key=${api_key}&language=es`
+      : `https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}&language=es`;
+
+    this.http.get(url).subscribe((data: any) => {
+      this.item = data;
+      this.posterUrl = data.poster_path
+        ? 'https://image.tmdb.org/t/p/w500' + data.poster_path
+        : 'assets/images/imagenNoDisponible.png';
+    });
+  }
+
+  abrirModal() {
+    if (!this.authService.estaLogueado()) {
+      alert('Debes iniciar sesión para poder guardar.');
+      return;
+    }
+
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
+
+  guardarItem() {
+  const usuarioId = this.authService.getUsuarioId();
+
+  if (!usuarioId) {
+    alert('Debes iniciar sesión.');
+    this.mostrarModal = false;
+    return;
+  }
+
+  const body = {
+    usuarioId: usuarioId,  // ✅ CORRECTO
+    itemId: this.item.id,
+    titulo: this.item.name || this.item.title,
+    tipo: this.esSerie ? 'serie' : 'pelicula',
+    estado: this.estadoSeleccionado,
+    puntuacion: this.puntuacion,
+    temporada: this.esSerie ? this.temporada : null,
+    capitulo: this.esSerie ? this.capitulo : null
+  };
+
+  this.http.post(this.apiUrl, body).subscribe({
+    next: () => {
+      alert('Guardado correctamente');
+      this.cerrarModal();
     },
     error: err => {
-      console.error('Error cargando detalle TMDB', err);
+      console.error(err);
+      alert('Error al guardar');
     }
   });
 }
+reemplazarImagen(event: any) {
+  event.target.src = 'assets/images/imagenNoDisponible.png';
+}
 
-
-  volver(): void {
-    this.router.navigate(['/series/busqueda']);
-  }
-
-  anadirAMiLista(): void {
-    // implementar guardado real con backend o localStorage
-    const miLista = JSON.parse(localStorage.getItem('miLista') || '[]');
-    miLista.push({ id: this.id, tipo: this.tipo, titulo: this.detalle?.titulo });
-    localStorage.setItem('miLista', JSON.stringify(miLista));
-    alert('Añadido a tu lista');
-  }
 }

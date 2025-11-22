@@ -1,4 +1,4 @@
-<!-- 🔍 Buscador -->
+<!-- Buscador -->
 <div class="buscador-container">
   <input
     type="text"
@@ -7,7 +7,7 @@
     (input)="buscarLibros()"
   />
 
-  <!-- 📖 Resultados flotantes -->
+  <!-- Resultados flotantes -->
   <div class="resultados-flotantes" *ngIf="!modoGenero && resultados.length > 0">
     <ul>
       <li *ngFor="let libro of resultados">
@@ -27,9 +27,8 @@
   </div>
 </div>
 
-<!-- 📑 Lista de géneros -->
+<!-- Lista de géneros -->
 <div *ngIf="!modoGenero">
-  <h3>Géneros</h3>
   <div class="generos-grid">
     <span
       *ngFor="let genero of generos"
@@ -41,13 +40,13 @@
   </div>
 </div>
 
-<!-- 📚 Resultados de género -->
+<!-- Resultados de género -->
 <div *ngIf="modoGenero">
   <h3>Resultados</h3>
 
   <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
 
-  <!-- 👇 AQUI SE AGREGA LA CLASE lista-libros -->
+  <!-- AQUI SE AGREGA LA CLASE lista-libros -->
   <ul *ngIf="resultados.length > 0" class="lista-libros">
     <li *ngFor="let libro of resultados">
       <a [routerLink]="['/busqueda-libro', libro.id]">

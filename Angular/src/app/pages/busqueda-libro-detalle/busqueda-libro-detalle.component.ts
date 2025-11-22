@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; // ✅ Importamos AuthService
+import { AuthService } from '../../services/auth.service'; 
 
 @Component({
   selector: 'app-busqueda-libro-detalle',
@@ -14,12 +14,10 @@ import { AuthService } from '../../services/auth.service'; // ✅ Importamos Aut
 })
 export class BusquedaLibroDetalleComponent implements OnInit {
   libro: any = null;
-  libroSeleccionado: any = null; // ✅ añadida
+  libroSeleccionado: any = null; 
   mostrarModal = false;
   estadoSeleccionado = 'lectura';
   puntuacion: number = 1;
-
-  estaLogueado = false; // ✅ Nueva variable
 
   private apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
   private apiUrl = 'http://localhost:8080/api/libros-usuarios';
@@ -27,11 +25,10 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private authService: AuthService // ✅ Inyectamos AuthService
+    public authService: AuthService // 👈 público para usar en el HTML
   ) {}
 
   ngOnInit() {
-    this.estaLogueado = this.authService.estaLogueado(); // ✅ Verificamos login
     const id = this.route.snapshot.paramMap.get('id');
     if (id) this.obtenerLibro(id);
   }
@@ -51,14 +48,13 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   }
 
   abrirModal() {
-  if (!this.authService.estaLogueado()) {
-    alert('Debes iniciar sesión para añadir libros.');
-    return;
+    if (!this.authService.estaLogueado()) {
+      alert('Debes iniciar sesión para añadir libros.');
+      this.mostrarModal = false;
+      return;
+    }
+    this.mostrarModal = true;
   }
-
-  this.mostrarModal = true;
-}
-
 
   cerrarModal() {
     this.mostrarModal = false;
@@ -66,9 +62,11 @@ export class BusquedaLibroDetalleComponent implements OnInit {
 
   guardarLibro() {
     const usuarioId = this.authService.getUsuarioId();
+
     if (!usuarioId) {
       alert('Debes iniciar sesión para añadir libros.');
-      return;
+      this.mostrarModal = false;
+      return; 
     }
 
     const datos = {

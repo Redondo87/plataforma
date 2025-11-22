@@ -1,4 +1,4 @@
-/* 🔍 Estilo del buscador */
+/* Estilo del buscador */
 .buscador-container {
   position: relative;
   text-align: center;
@@ -12,10 +12,10 @@ input {
   border-radius: 6px;
 }
 
-/* 📖 Cuadro flotante de resultados */
+/*Cuadro flotante de resultados */
 .resultados-flotantes {
   position: absolute;
-  top: 50px; /* debajo del input */
+  top: 50px; 
   left: 50%;
   transform: translateX(-50%);
   width: 600px;
@@ -29,7 +29,7 @@ input {
   z-index: 1000; /* se pone por encima de géneros */
 }
 
-/* 📖 Lista de resultados flotantes */
+/*Lista de resultados flotantes */
 .resultados-flotantes ul {
   list-style-type: none;
   padding: 0;
@@ -59,18 +59,18 @@ input {
   margin-right: 10px;
 }
 
-/* 📖 Lista de libros grandes (principal y por género) */
+/* Lista de libros*/
 .lista-libros {
   list-style-type: none;
-  padding: 0 40px; /* 🔹 margen lateral interno */
-  margin: 0 auto;  /* 🔹 centra la lista */
-  max-width: 1000px; /* 🔹 evita que se estire demasiado en pantallas grandes */
+  padding: 0 40px; /*margen lateral interno */
+  margin: 0 auto;  /*centra la lista */
+  max-width: 1000px; /* evita que se estire demasiado en pantallas grandes */
 }
 
 .lista-libros li {
   display: flex;
   align-items: flex-start;
-  gap: 20px; /* 🆕 Espacio entre la imagen y el texto */
+  gap: 20px; /* Espacio entre la imagen y el texto */
   margin-bottom: 1rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 1rem;
@@ -129,7 +129,7 @@ input {
   }
 
   .lista-libros li img {
-    width: 60%; /* imagen más pequeña en móviles */
+    width: 60%; 
     margin-left: 0;
   }
 
@@ -140,14 +140,14 @@ input {
 
   /* Sección de géneros */
   .generos-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet/móvil */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
-  /* Ajuste extra para móviles muy pequeños */
+
   .generos-grid {
-    grid-template-columns: 1fr; /* 1 columna en móvil pequeño */
+    grid-template-columns: 1fr; 
   }
 }

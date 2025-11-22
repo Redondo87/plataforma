@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import * as he from 'he';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-busqueda-libros',
@@ -30,88 +31,126 @@ export class BusquedaLibrosComponent {
 
   private apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
+  // Buscar por texto
   buscarLibros() {
     this.modoGenero = false;
     this.mensaje = '';
-
     clearTimeout(this.searchTimeout);
 
     this.searchTimeout = setTimeout(() => {
       const consulta = this.busqueda.trim();
-
       if (consulta.length < 3) {
         this.resultados = [];
         return;
       }
 
-      const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-        consulta
-      )}&key=${this.apiKey}&langRestrict=es`;
+      const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(consulta)}&key=${this.apiKey}`;
+      this.http.get<any>(url).subscribe({
+        next: response => {
+          this.resultados = (response.items || [])
+            .filter((item: any) => item.volumeInfo?.description)
+            .map((item: any) => {
+              const info = item.volumeInfo;
+              return {
+                id: item.id,
+                titulo: info.title,
+                autor: info.authors?.join(', ') || 'Autor desconocido',
+                descripcion: this.limpiarTexto(info.description),
+                imagen: info.imageLinks?.thumbnail || '/assets/images/imagenNoDisponible.png',
+                idioma: info.language
+              };
+            });
+        },
+        error: err => {
+          console.error('Error buscando libros:', err);
+          this.resultados = [];
+          this.mensaje = 'Error al buscar libros. Intenta más tarde.';
+        }
+      });
+    }, 400);
+  }
 
-      this.http.get<any>(url).subscribe(response => {
-        this.resultados = (response.items || []).map((item: any) => {
+  // Buscar por género
+  buscarPorGenero(genero: string) {
+    this.modoGenero = true;
+    this.busqueda = '';
+    this.mensaje = '';
+
+    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(genero)}&key=${this.apiKey}`;
+    this.http.get<any>(url).subscribe({
+      next: response => {
+        if (!response.items || response.items.length === 0) {
+          this.resultados = [];
+          this.mensaje = `No se encontraron libros en el género "${genero}".`;
+          return;
+        }
+
+        // Filtrar solo libros con descripción
+        const librosFiltrados = response.items.filter((item: any) => {
+          return item.volumeInfo?.description && item.volumeInfo.description.length > 0;
+        });
+
+        if (librosFiltrados.length === 0) {
+          this.resultados = [];
+          this.mensaje = `No se encontraron libros con descripción en el género "${genero}".`;
+          return;
+        }
+
+        this.resultados = librosFiltrados.map((item: any) => {
           const info = item.volumeInfo;
           return {
             id: item.id,
             titulo: info.title,
             autor: info.authors?.join(', ') || 'Autor desconocido',
-            descripcion: this.limpiarTexto(info.description || 'Sin descripción disponible'),
-            imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
+            descripcion: this.limpiarTexto(info.description),
+            imagen: info.imageLinks?.thumbnail || '/assets/images/imagenNoDisponible.png',
+            idioma: info.language
           };
         });
-      });
-    }, 400); // espera 400ms después de dejar de escribir
-  }
-
-  buscarPorGenero(genero: string) {
-    this.modoGenero = true;
-    this.busqueda = '';
-    this.mensaje = ``;
-    
-    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(
-      genero
-    )}&key=${this.apiKey}&langRestrict=es`;
-
-      this.http.get<any>(url).subscribe(response => {
-      if (!response.items || response.items.length === 0) {
+      },
+      error: err => {
+        console.error('Error cargando libros por género:', err);
         this.resultados = [];
-        this.mensaje = `No se encontraron libros en el género "${genero}".`;
-        return;
+        this.mensaje = `No se pudieron cargar los libros del género "${genero}". Intenta más tarde.`;
       }
-
-      // 🔹 Filtrar solo los libros cuyo idioma sea español
-      const librosFiltrados = response.items.filter(
-        (item: any) => item.volumeInfo?.language === 'es'
-      );
-
-      if (librosFiltrados.length === 0) {
-        this.resultados = [];
-        this.mensaje = `No se encontraron libros en español en el género "${genero}".`;
-        return;
-      }
-
-      this.resultados = librosFiltrados.map((item: any) => {
-        const info = item.volumeInfo;
-        return {
-          id: item.id,
-          titulo: info.title,
-          autor: info.authors?.join(', ') || 'Autor desconocido',
-          descripcion: this.limpiarTexto(info.description || 'Sin descripción disponible'),
-          imagen: info.imageLinks?.thumbnail || 'assets/imagen-no-disponible.jpg'
-        };
-      });
     });
   }
 
+  // Limpiar caracteres HTML y entidades
   limpiarTexto(texto: string): string {
     if (!texto) return texto;
     return he.decode(texto).replace(/�/g, ' ').trim();
   }
+
+  // Reemplazar imagen si falla
   reemplazarImagen(event: Event) {
     const target = event.target as HTMLImageElement;
     target.src = '/assets/images/imagenNoDisponible.png';
   }
 
+  // Guardar libro solo si está logueado
+  guardarLibro(item: any, estado: string, puntuacion: number) {
+    const usuarioId = this.authService.getUsuarioId();
+    if (!usuarioId) {
+      alert('Debes iniciar sesión para guardar libros.');
+      return;
+    }
+
+    const body = {
+      usuarioId,
+      libroId: item.id,
+      estado,
+      puntuacion
+    };
+
+    this.http.post('http://localhost:8080/api/libros-usuarios', body).subscribe({
+      next: () => alert('Libro guardado correctamente'),
+      error: err => {
+        console.error('Error guardando libro:', err);
+        alert('Error al guardar el libro.');
+      }
+    });
+  }
 }
