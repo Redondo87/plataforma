@@ -2,52 +2,31 @@
   [usuarioLogueado]="usuarioLogueado"
   [nombreUsuario]="nombreUsuario"
   (cerrarSesionEvent)="cerrarSesion()"
-  (toggleLoginEvent)="toggleLoginForm()"
-  (toggleLibrosEvent)="toggleLibros()"
-  (toggleSeriesEvent)="toggleSeries()">
+  (toggleLoginEvent)="toggleLoginForm()">
 </app-header>
 
-<!-- 🔍 Libros -->
-<div *ngIf="mostrarLibros" class="desplegable-api">
-  <input type="text" [(ngModel)]="busquedaLibros" (input)="buscarLibros()" placeholder="Buscar libros..." />
-  <ul *ngIf="resultadosLibros.length > 0">
-    <li *ngFor="let libro of resultadosLibros" style="margin-bottom: 1rem;">
-      <img [src]="libro.imagen" alt="Portada" style="width: 80px; height: auto; margin-right: 10px;" />
-      <strong>{{ libro.titulo }}</strong> - {{ libro.autor }}
-      <p>{{ libro.descripcion }}</p>
-      <span *ngIf="libro.precio">Precio: {{ libro.precio | currency:'EUR' }}</span>
-    </li>
-  </ul>
-</div>
-
-<!-- 🎬 Series/Películas -->
-<div *ngIf="mostrarSeries" class="desplegable-api">
-  <input type="text" [(ngModel)]="busquedaSeries" (input)="buscarSeries()" placeholder="Buscar series/películas..." />
-  <ul *ngIf="resultadosSeries.length > 0 && busquedaSeries.trim().length >= 3">
-    <li *ngFor="let item of resultadosSeries" style="margin-bottom: 1rem;">
-      <strong>{{ item.title || item.name }}</strong>
-      <p *ngIf="item.overview">{{ item.overview }}</p>
-      <img *ngIf="item.poster_path" [src]="getImageUrl(item.poster_path)" alt="Poster" style="width: 80px; height: auto; margin-top: 5px;" />
-    </li>
-  </ul>
-</div>
-
-<!-- 🔑 Login / Registro -->
 <div class="main-container">
+
+  <!-- FORMULARIO LOGIN / REGISTRO -->
   <div *ngIf="showLoginForm" class="login-dropdown">
+
     <ng-container *ngIf="!showRegisterForm; else registerForm">
       <h2>Inicia sesión</h2>
+
       <form (submit)="loginUsuario(); $event.preventDefault()">
-        <input type="text" [(ngModel)]="registroNombre" name="loginNombre" placeholder="Usuario" /><br />
-        <input type="email" [(ngModel)]="registroEmail" name="loginEmail" placeholder="Correo" /><br />
-        <input type="password" [(ngModel)]="registroPassword" name="loginPassword" placeholder="Contraseña" /><br />
+        <input type="email" [(ngModel)]="loginEmail" name="loginEmail" placeholder="Correo" />
+        <input type="password" [(ngModel)]="loginPassword" name="loginPassword" placeholder="Contraseña" />
         <button type="submit">Entrar</button>
       </form>
-      <p>¿No tienes cuenta? <a (click)="showRegister()" style="cursor:pointer; color:blue;">Regístrate aquí</a></p>
+
+      <p>¿No tienes cuenta?
+        <a (click)="showRegister()" style="cursor:pointer; color:blue;">Regístrate aquí</a>
+      </p>
     </ng-container>
 
     <ng-template #registerForm>
       <h2>Crear cuenta</h2>
+
       <form (submit)="registrarUsuario(); $event.preventDefault()">
         <input type="text" [(ngModel)]="registroNombre" name="nombre" placeholder="Usuario" /><br />
         <input type="email" [(ngModel)]="registroEmail" name="email" placeholder="Correo" /><br />
@@ -55,13 +34,19 @@
         <input type="password" [(ngModel)]="registroConfirmacion" name="confirmPassword" placeholder="Confirmar contraseña" /><br />
         <button type="submit">Registrarse</button>
       </form>
-      <p>¿Ya tienes cuenta? <a (click)="showLogin()" style="cursor:pointer; color:blue;">Inicia sesión</a></p>
+
+      <p>¿Ya tienes cuenta?
+        <a (click)="showLogin()" style="cursor:pointer; color:blue;">Inicia sesión</a>
+      </p>
     </ng-template>
+
   </div>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
+
 </div>
 
 <app-footer></app-footer>

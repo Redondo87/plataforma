@@ -33,20 +33,20 @@
 </header>
 
 <!-- Buscador de libros -->
-<div class="fullscreen-search" *ngIf="buscadorActivo">
-  <div class="search-content" [ngClass]="{ 'has-images': resultadosLibros.length > 0 }">
-    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleLibros()" />
+<div class="fullscreen-search" *ngIf="mostrarBuscadorLibros">
+  <div class="search-content" [ngClass]="{ 'has-images': resultadosHeaderLibros.length > 0 }">
+    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="cerrarBuscadorLibros()" />
     <input
       type="text"
       class="search-input"
       placeholder="Buscar libros..."
-      [(ngModel)]="terminoLibro"
+      [(ngModel)]="busquedaHeaderLibros"
       (input)="buscarLibros()"
     />
-    <ul class="resultados-lista imagenes" *ngIf="resultadosLibros.length > 0">
-      <li *ngFor="let libro of resultadosLibros">
+    <ul class="resultados-lista imagenes" *ngIf="resultadosHeaderLibros.length > 0">
+      <li *ngFor="let libro of resultadosHeaderLibros">
         <a [routerLink]="['/libro', libro.id]" (click)="cerrarBuscadorLibros()">
-          <img [src]="libro.volumeInfo.imageLinks?.thumbnail || 'assets/images/imagenNoDisponible.png'" 
+          <img [src]="libro.volumeInfo.imageLinks?.thumbnail || 'assets/images/imagenNoDisponible.png'"
                alt="Portada de {{ libro.volumeInfo?.title }}" />
         </a>
       </li>
@@ -55,18 +55,18 @@
 </div>
 
 <!-- Buscador de series/películas -->
-<div class="fullscreen-search" *ngIf="buscadorSeriesActivo">
-  <div class="search-content" [ngClass]="{ 'has-images': resultadosSeries.length > 0 }">
-    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="toggleSeries()" />
+<div class="fullscreen-search" *ngIf="mostrarBuscadorSeries">
+  <div class="search-content" [ngClass]="{ 'has-images': resultadosHeaderSeries.length > 0 }">
+    <img src="assets/images/equis.jpg" alt="Cerrar" class="close-icon" (click)="cerrarBuscadorSeries()" />
     <input
       type="text"
       class="search-input"
       placeholder="Buscar series o películas..."
-      [(ngModel)]="terminoSerie"
+      [(ngModel)]="busquedaHeaderSeries"
       (input)="buscarSeries()"
     />
-    <ul class="resultados-lista imagenes" *ngIf="resultadosSeries.length > 0">
-      <li *ngFor="let item of resultadosSeries">
+    <ul class="resultados-lista imagenes" *ngIf="resultadosHeaderSeries.length > 0">
+      <li *ngFor="let item of resultadosHeaderSeries">
         <a [routerLink]="['/serie', item.media_type, item.id]" (click)="cerrarBuscadorSeries()">
           <img [src]="getPosterUrl(item.poster_path)" alt="Portada de {{ item.title || item.name }}" />
         </a>

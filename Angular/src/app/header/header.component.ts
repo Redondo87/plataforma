@@ -19,21 +19,22 @@ export class HeaderComponent {
   @Output() toggleLoginEvent = new EventEmitter<void>();
   @Output() cerrarSesionEvent = new EventEmitter<void>();
 
-  buscadorActivo = false;
-  buscadorSeriesActivo = false;
+  // Buscador de libros
+  mostrarBuscadorLibros = false;
+  busquedaHeaderLibros = '';
+  resultadosHeaderLibros: any[] = [];
 
-  terminoLibro = '';
-  resultadosLibros: any[] = [];
-
-  terminoSerie = '';
-  resultadosSeries: any[] = [];
+  // Buscador de series/películas
+  mostrarBuscadorSeries = false;
+  busquedaHeaderSeries = '';
+  resultadosHeaderSeries: any[] = [];
 
   constructor(private http: HttpClient, private router: Router) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.buscadorActivo = false;
-        this.buscadorSeriesActivo = false;
+        this.mostrarBuscadorLibros = false;
+        this.mostrarBuscadorSeries = false;
       });
   }
 
@@ -46,23 +47,21 @@ export class HeaderComponent {
   }
 
   toggleLibros() {
-    this.buscadorActivo = !this.buscadorActivo;
-    this.resultadosLibros = [];
-    this.terminoLibro = '';
+    this.mostrarBuscadorLibros = !this.mostrarBuscadorLibros;
+    this.resultadosHeaderLibros = [];
+    this.busquedaHeaderLibros = '';
   }
 
   toggleSeries() {
-    this.buscadorSeriesActivo = !this.buscadorSeriesActivo;
-    this.resultadosSeries = [];
-    this.terminoSerie = '';
+    this.mostrarBuscadorSeries = !this.mostrarBuscadorSeries;
+    this.resultadosHeaderSeries = [];
+    this.busquedaHeaderSeries = '';
   }
 
   buscarLibros() {
-    const consulta = this.terminoLibro.trim();
-
-    // 🔹 Solo buscar si hay mínimo 3 caracteres
+    const consulta = this.busquedaHeaderLibros.trim();
     if (consulta.length < 3) {
-      this.resultadosLibros = [];
+      this.resultadosHeaderLibros = [];
       return;
     }
 
@@ -71,16 +70,14 @@ export class HeaderComponent {
     const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`;
 
     this.http.get<any>(url).subscribe(res => {
-      this.resultadosLibros = res.items || [];
+      this.resultadosHeaderLibros = res.items || [];
     });
   }
 
   buscarSeries() {
-    const consulta = this.terminoSerie.trim();
-
-    // 🔹 Solo buscar si hay mínimo 3 caracteres
+    const consulta = this.busquedaHeaderSeries.trim();
     if (consulta.length < 3) {
-      this.resultadosSeries = [];
+      this.resultadosHeaderSeries = [];
       return;
     }
 
@@ -89,25 +86,23 @@ export class HeaderComponent {
     const url = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=${apiKey}&language=es`;
 
     this.http.get<any>(url).subscribe(res => {
-      this.resultadosSeries = res.results || [];
+      this.resultadosHeaderSeries = res.results || [];
     });
   }
 
   getPosterUrl(path: string | null): string {
-    return path
-      ? `https://image.tmdb.org/t/p/w500${path}`
-      : 'assets/images/imagenNoDisponible.png';
+    return path ? `https://image.tmdb.org/t/p/w500${path}` : 'assets/images/imagenNoDisponible.png';
   }
 
   cerrarBuscadorLibros() {
-    this.buscadorActivo = false;
-    this.resultadosLibros = [];
-    this.terminoLibro = '';
+    this.mostrarBuscadorLibros = false;
+    this.resultadosHeaderLibros = [];
+    this.busquedaHeaderLibros = '';
   }
 
   cerrarBuscadorSeries() {
-    this.buscadorSeriesActivo = false;
-    this.resultadosSeries = [];
-    this.terminoSerie = '';
+    this.mostrarBuscadorSeries = false;
+    this.resultadosHeaderSeries = [];
+    this.busquedaHeaderSeries = '';
   }
 }
