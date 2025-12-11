@@ -23,17 +23,25 @@ export class MejoresLibrosComponent implements OnInit {
   estadoSeleccionado: string = 'lectura';
   puntuacion: number | null = null;
 
-  estaLogueado = false; 
-
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, public authService: AuthService) { }
 
   ngOnInit() {
-    this.estaLogueado = this.authService.estaLogueado(); 
     this.cargarMejoresLibros();
   }
 
-  cargarMejoresLibros() {
-    this.http.get<any[]>('http://localhost:8080/api/libros-usuarios/top')
+  // 🔐 Igual que en "mejores series"
+  get estaLogueado() {
+    return this.authService.estaLogueado();
+  }
+
+    cargarMejoresLibros() {
+    const usuarioId = this.authService.getUsuarioId();
+
+    const url = usuarioId
+      ? `http://localhost:8080/api/libros-usuarios/top?usuarioId=${usuarioId}`
+      : `http://localhost:8080/api/libros-usuarios/top`;
+
+    this.http.get<any[]>(url)
       .subscribe({
         next: data => {
           this.mejoresLibros = data;
@@ -48,10 +56,7 @@ export class MejoresLibrosComponent implements OnInit {
   }
 
   abrirModal(libro: any) {
-    if (!this.estaLogueado) {
-      alert('Debes iniciar sesión para añadir libros.');
-      return;
-    }
+    if (!this.estaLogueado) return;
 
     this.libroSeleccionado = libro;
     this.estadoSeleccionado = 'lectura';
@@ -69,10 +74,7 @@ export class MejoresLibrosComponent implements OnInit {
     if (!this.libroSeleccionado) return;
 
     const usuarioId = this.authService.getUsuarioId();
-    if (!usuarioId) {
-      alert('Debes iniciar sesión para añadir libros.');
-      return;
-    }
+    if (!usuarioId) return;
 
     const nuevoLibro = {
       usuarioId,

@@ -7,6 +7,7 @@ import { BusquedaLibroDetalleComponent } from './pages/busqueda-libro-detalle/bu
 import { MejoresLibrosComponent } from './pages/mejores-libros/mejores-libros.component';
 import { BusquedaSeriesPeliculasComponent } from './pages/busqueda-series-peliculas/busqueda-series-peliculas.component';
 import { BusquedaSeriesPeliculasDetalleComponent } from './pages/busqueda-series-peliculas-detalle/busqueda-series-peliculas-detalle.component';
+import { MejoresSeriesPeliculasComponent } from './pages/mejores-series-peliculas/mejores-series-peliculas.component';
 
 export const routes: Routes = [
   {
@@ -34,12 +35,16 @@ export const routes: Routes = [
     component: MejoresLibrosComponent
   },
   {
-  path: 'series/busqueda',
-  component: BusquedaSeriesPeliculasComponent
+    path: 'series/busqueda',
+    component: BusquedaSeriesPeliculasComponent
   },
   {
-  path: 'series/detalle/:tipo/:id',
-  component: BusquedaSeriesPeliculasDetalleComponent
+    path: 'series/detalle/:tipo/:id',
+    component: BusquedaSeriesPeliculasDetalleComponent
+  },
+  {
+    path: 'series/mejores',
+    component: MejoresSeriesPeliculasComponent
   }
 
 ];

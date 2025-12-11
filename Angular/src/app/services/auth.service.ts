@@ -1,52 +1,46 @@
 import { Injectable } from '@angular/core';
 
+export interface UsuarioSesion {
+  id: number;
+  nombre: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private usuarioIdKey = 'usuarioId';
-  private usuarioNombreKey = 'usuarioNombre';
+  private usuarioActual: UsuarioSesion | null = null;
 
   constructor() {}
 
-  // Devuelve el Id del usuario logueado
+  // Guarda usuario al iniciar sesión
+  setUsuario(id: number, nombre: string) {
+    this.usuarioActual = { id, nombre };
+  }
+
+  // Recupera el usuario completo (compatible con código antiguo)
+  getUsuario(): UsuarioSesion | null {
+    return this.usuarioActual;
+  }
+
+  // Solo el ID
   getUsuarioId(): number | null {
-    const userId = localStorage.getItem(this.usuarioIdKey);
-    if (!userId || userId === 'undefined' || userId === 'null') return null;
-    return +userId;
+    return this.usuarioActual?.id ?? null;
   }
 
-  // Devuelve el nombre del usuario logueado
+  // Solo el nombre
   getUsuarioNombre(): string | null {
-    const nombre = localStorage.getItem(this.usuarioNombreKey);
-    if (!nombre || nombre === 'undefined' || nombre === 'null') return null;
-    return nombre;
+    return this.usuarioActual?.nombre ?? null;
   }
 
-  // Devuelve usuario completo
-  getUsuario() {
-    const id = this.getUsuarioId();
-    const nombre = this.getUsuarioNombre();
-
-    if (!id) return null;
-    return { id, nombre };
-  }
-
-  // Verifica si el usuario está logueado
+  // ¿Está logueado?
   estaLogueado(): boolean {
-    return this.getUsuarioId() !== null;
+    return this.usuarioActual !== null;
   }
 
-  // Cierra la sesión correctamente
+  // Cerrar sesión
   cerrarSesion(): void {
-    localStorage.removeItem(this.usuarioIdKey);
-    localStorage.removeItem(this.usuarioNombreKey);
-  }
-
-  // Opcional: método para login
-  login(id: number, nombre: string): void {
-    localStorage.setItem(this.usuarioIdKey, id.toString());
-    localStorage.setItem(this.usuarioNombreKey, nombre);
+    this.usuarioActual = null;
   }
 }

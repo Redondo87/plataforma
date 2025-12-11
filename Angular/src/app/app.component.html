@@ -7,7 +7,6 @@
 
 <div class="main-container">
 
-  <!-- FORMULARIO LOGIN / REGISTRO -->
   <div *ngIf="showLoginForm" class="login-dropdown">
 
     <ng-container *ngIf="!showRegisterForm; else registerForm">
@@ -20,7 +19,7 @@
       </form>
 
       <p>¿No tienes cuenta?
-        <a (click)="showRegister()" style="cursor:pointer; color:blue;">Regístrate aquí</a>
+        <a (click)="showRegister()" style="cursor:pointer;color:blue;">Regístrate aquí</a>
       </p>
     </ng-container>
 
@@ -36,13 +35,12 @@
       </form>
 
       <p>¿Ya tienes cuenta?
-        <a (click)="showLogin()" style="cursor:pointer; color:blue;">Inicia sesión</a>
+        <a (click)="showLogin()" style="cursor:pointer;color:blue;">Inicia sesión</a>
       </p>
     </ng-template>
 
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
@@ -50,3 +48,4 @@
 </div>
 
 <app-footer></app-footer>
+

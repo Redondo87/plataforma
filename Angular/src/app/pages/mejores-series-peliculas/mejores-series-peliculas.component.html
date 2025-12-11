@@ -1,6 +1,5 @@
-<div class="mejores-libros-container">
-
-  <table class="table-ranking" *ngIf="mejoresLibros.length > 0">
+<div class="mejores-series-container">
+  <table class="table-ranking" *ngIf="mejoresSeries.length > 0">
     <thead>
       <tr>
         <th>Ranking</th>
@@ -10,24 +9,21 @@
         <th>Estado</th>
       </tr>
     </thead>
-
     <tbody>
-      <tr *ngFor="let libro of mejoresLibros">
-        <td>{{ libro.ranking }}</td>
-
+      <tr *ngFor="let serie of mejoresSeries">
+        <td>{{ serie.ranking }}</td>
         <td class="titulo-imagen">
-          <img [src]="libro.imagen" alt="{{ libro.titulo }}" />
-          {{ libro.titulo }}
+          <img [src]="serie.imagen" alt="{{ serie.titulo }}" style="height:50px; margin-right:5px;" />
+          {{ serie.titulo }}
         </td>
-
-        <td>{{ libro.promedio }}</td>
-        <td>{{ libro.miPuntuacion || '-' }}</td>
-
+        <td>{{ serie.promedio | number:'1.1-2' }}</td>
+        <td>{{ serie.miPuntuacion || '-' }}</td>
         <td>
           <button
             [disabled]="!estaLogueado"
-            (click)="abrirModal(libro)"
-            [title]="!estaLogueado ? 'Debes iniciar sesión para añadir libros' : 'Añadir a tu lista'">
+            (click)="abrirModal(serie)"
+            [title]="!estaLogueado ? 'Inicia sesión para añadir series/películas' : ''"
+          >
             Añadir a mi lista
           </button>
         </td>
@@ -39,20 +35,20 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 </div>
 
-<!-- MODAL -->
+<!-- Modal -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal">
-    <h3>{{ libroSeleccionado?.titulo }}</h3>
+    <h3>{{ serieSeleccionada?.titulo }}</h3>
 
     <div class="campos-horizontal">
       <div class="campo-horizontal">
         <label>Estado:</label>
         <select [(ngModel)]="estadoSeleccionado">
-          <option value="lectura">Lectura</option>
+          <option value="viendo">Viendo</option>
           <option value="terminado">Terminado</option>
           <option value="en espera">En espera</option>
           <option value="abandonado">Abandonado</option>
-          <option value="plan para leer">Plan para leer</option>
+          <option value="plan para ver">Plan para ver</option>
         </select>
       </div>
 
@@ -63,7 +59,7 @@
     </div>
 
     <div class="modal-buttons">
-      <button class="guardar" (click)="guardarLibro()">Guardar</button>
+      <button (click)="guardarSerie()">Guardar</button>
       <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
     </div>
   </div>

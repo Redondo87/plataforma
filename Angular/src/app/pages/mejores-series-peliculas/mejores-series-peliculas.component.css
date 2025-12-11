@@ -1,5 +1,5 @@
-/* Contenedor principal */
-.mejores-libros-container {
+/* CONTENEDOR PRINCIPAL */
+.mejores-series-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1.5rem;
@@ -8,7 +8,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Tabla */
+/* TABLA */
 .table-ranking {
   width: 100%;
   border-collapse: collapse;
@@ -26,12 +26,13 @@
   font-weight: 600;
 }
 
-/* Imagen + título */
+/* TITULO + IMAGEN */
 .titulo-imagen {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   text-align: left !important;
+  white-space: nowrap;
 }
 
 .titulo-imagen img {
@@ -42,7 +43,7 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
-/* Botón Añadir a mi lista */
+/* BOTÓN AÑADIR A MI LISTA */
 button {
   background-color: #5cb85c;
   color: white;
@@ -60,13 +61,13 @@ button:hover {
 }
 
 button:disabled {
-  background-color: #ccc;
-  color: #666;
-  cursor: not-allowed;
+  background-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
   border: 1px solid #aaa;
 }
 
-/* Modal */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -101,21 +102,7 @@ button:disabled {
   flex: 1;
 }
 
-.campo-horizontal label {
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  display: block;
-}
-
-.campo-horizontal select,
-.campo-horizontal input {
-  width: 100%;
-  padding: 0.4rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-/* Botones modal */
+/* BOTONES MODAL */
 .modal-buttons {
   margin-top: 1.5rem;
   display: flex;
@@ -125,9 +112,10 @@ button:disabled {
 .modal-buttons button {
   flex: 1;
   margin: 0 0.5rem;
+  padding: 0.6rem 1rem;
 }
 
-/* ✔ Botón GUARDAR verde (igual que series/películas) */
+/* BOTÓN GUARDAR (VERDE) */
 .modal-buttons .guardar {
   background-color: #5cb85c !important;
   color: white !important;
@@ -138,6 +126,7 @@ button:disabled {
   background-color: #4cae4c !important;
 }
 
+/* BOTÓN CANCELAR */
 .modal-buttons .cancelar {
   background-color: #ccc;
   color: black;
@@ -147,13 +136,8 @@ button:disabled {
   background-color: #b3b3b3;
 }
 
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .mejores-libros-container {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
   .table-ranking th,
   .table-ranking td {
     padding: 0.5rem 0.4rem;
@@ -163,6 +147,10 @@ button:disabled {
   .titulo-imagen img {
     width: 45px;
     height: 65px;
+  }
+
+  .mejores-series-container {
+    overflow-x: auto;
   }
 
   .table-ranking {

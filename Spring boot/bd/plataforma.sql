@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `libros_usuarios` (
   PRIMARY KEY (`id`),
   KEY `libros_usuarios_ibfk_1` (`usuario_id`),
   CONSTRAINT `libros_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Volcando datos para la tabla plataforma.libros_usuarios: ~10 rows (aproximadamente)
 REPLACE INTO `libros_usuarios` (`id`, `usuario_id`, `libro_id`, `estado`, `puntuacion`, `fecha_creacion`) VALUES
@@ -43,7 +43,8 @@ REPLACE INTO `libros_usuarios` (`id`, `usuario_id`, `libro_id`, `estado`, `puntu
 	(8, 2, 'awl0DwAAQBAJ', 'lectura', 7, '2025-10-29 19:23:44'),
 	(9, 2, 'AC-REAAAQBAJ', 'plan para leer', 8, '2025-10-29 19:24:35'),
 	(10, 1, 'zttSEAAAQBAJ', 'terminado', 9, '2025-11-04 19:06:50'),
-	(11, 1, 'ujnRDgAAQBAJ', 'terminado', 9, '2025-11-05 19:07:37');
+	(11, 1, 'ujnRDgAAQBAJ', 'terminado', 9, '2025-11-05 19:07:37'),
+	(21, 1, '3rs4EAAAQBAJ', 'terminado', 7, '2025-12-03 19:13:08');
 
 -- Volcando estructura para tabla plataforma.series_usuarios
 CREATE TABLE IF NOT EXISTS `series_usuarios` (
@@ -60,11 +61,14 @@ CREATE TABLE IF NOT EXISTS `series_usuarios` (
   PRIMARY KEY (`id`),
   KEY `series_usuarios_ibfk_1` (`usuario_id`),
   CONSTRAINT `series_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.series_usuarios: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.series_usuarios: ~2 rows (aproximadamente)
 REPLACE INTO `series_usuarios` (`id`, `usuario_id`, `item_id`, `titulo`, `tipo`, `estado`, `puntuacion`, `temporada`, `capitulo`, `fecha_creacion`) VALUES
-	(1, 1, 1311031, 'Guardianes de la noche: Kimetsu no Yaiba La fortaleza infinita', 'pelicula', 'terminado', 7, NULL, NULL, '2025-11-23 19:10:06');
+	(1, 1, 1311031, 'Guardianes de la noche: Kimetsu no Yaiba La fortaleza infinita', 'pelicula', 'terminado', 7, NULL, NULL, '2025-11-23 19:10:06'),
+	(2, 1, 230069, 'Respira', 'serie', 'viendo', 8, 1, 10, '2025-11-25 20:13:21'),
+	(4, 1, 1396, 'Breaking Bad', 'serie', 'viendo', 1, NULL, NULL, '2025-11-27 20:42:19'),
+	(5, 1, 1396, 'Breaking Bad', 'serie', 'viendo', 1, NULL, NULL, '2025-11-28 19:10:03');
 
 -- Volcando estructura para tabla plataforma.usuario
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -73,13 +77,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `contrasena` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Volcando datos para la tabla plataforma.usuario: ~3 rows (aproximadamente)
 REPLACE INTO `usuario` (`id`, `nombre`, `contrasena`, `email`) VALUES
 	(1, 'Ana', '$2a$10$4ICZdK4cS6RE7cRasATWV.bfxNO/LcaYYxL1B1NeV13eY9c7Y2Hcq', 'ana@gmail.com'),
 	(2, 'Raul', '$2a$10$oHtdxkjPPNpqCO5TEGOS7etXqZFyEwquWnVoHku5QNDjwVUY8LyN6', 'raulga@gmail.com'),
-	(3, 'Maria', '$2a$10$Jx/JWJex8rHGeTZgZzezK.yAvQybcL4qOfu3fvo6XwkJEeXQPhcv.', 'maria@gmail.com');
+	(5, 'Maria', '$2a$10$iUt0HUAy93g6bL.Mnjt1qOFXqpuRaGimFqchK4BRQm7XZvUL7rL1a', 'maria@gmail.com'),
+	(6, 'Isi', '$2a$10$mQg2pCuAK5D7q3/S/MKgC.zHG41hsJV3q059wmR6VSyOmxC6cdQOa', 'isi@gmail.com');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

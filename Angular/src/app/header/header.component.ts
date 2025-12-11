@@ -13,18 +13,17 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  @Input() usuarioLogueado: boolean = false;
-  @Input() nombreUsuario: string = '';
+
+  @Input() usuarioLogueado = false;
+  @Input() nombreUsuario = '';
 
   @Output() toggleLoginEvent = new EventEmitter<void>();
   @Output() cerrarSesionEvent = new EventEmitter<void>();
 
-  // Buscador de libros
   mostrarBuscadorLibros = false;
   busquedaHeaderLibros = '';
   resultadosHeaderLibros: any[] = [];
 
-  // Buscador de series/películas
   mostrarBuscadorSeries = false;
   busquedaHeaderSeries = '';
   resultadosHeaderSeries: any[] = [];
@@ -60,14 +59,10 @@ export class HeaderComponent {
 
   buscarLibros() {
     const consulta = this.busquedaHeaderLibros.trim();
-    if (consulta.length < 3) {
-      this.resultadosHeaderLibros = [];
-      return;
-    }
+    if (consulta.length < 3) { this.resultadosHeaderLibros = []; return; }
 
-    const query = encodeURIComponent(consulta);
     const apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${consulta}&key=${apiKey}`;
 
     this.http.get<any>(url).subscribe(res => {
       this.resultadosHeaderLibros = res.items || [];
@@ -76,14 +71,10 @@ export class HeaderComponent {
 
   buscarSeries() {
     const consulta = this.busquedaHeaderSeries.trim();
-    if (consulta.length < 3) {
-      this.resultadosHeaderSeries = [];
-      return;
-    }
+    if (consulta.length < 3) { this.resultadosHeaderSeries = []; return; }
 
-    const query = encodeURIComponent(consulta);
     const apiKey = '218315c8512d576a1f186b27b8d7538e';
-    const url = `https://api.themoviedb.org/3/search/multi?query=${query}&api_key=${apiKey}&language=es`;
+    const url = `https://api.themoviedb.org/3/search/multi?query=${consulta}&api_key=${apiKey}&language=es`;
 
     this.http.get<any>(url).subscribe(res => {
       this.resultadosHeaderSeries = res.results || [];
@@ -96,13 +87,9 @@ export class HeaderComponent {
 
   cerrarBuscadorLibros() {
     this.mostrarBuscadorLibros = false;
-    this.resultadosHeaderLibros = [];
-    this.busquedaHeaderLibros = '';
   }
 
   cerrarBuscadorSeries() {
     this.mostrarBuscadorSeries = false;
-    this.resultadosHeaderSeries = [];
-    this.busquedaHeaderSeries = '';
   }
 }

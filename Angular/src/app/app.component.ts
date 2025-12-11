@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { UsuarioService, Usuario } from './services/usuario.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,58 +16,52 @@ import { UsuarioService, Usuario } from './services/usuario.service';
 })
 export class AppComponent {
 
-  // Estado de usuario
   usuarioLogueado = false;
   nombreUsuario = '';
 
-  // Campos login
-  loginEmail = '';
-  loginPassword = '';
-
-  // Formularios login / registro
   showLoginForm = false;
   showRegisterForm = false;
 
-  // Campos registro
+  loginEmail = '';
+  loginPassword = '';
+
   registroNombre = '';
   registroEmail = '';
   registroPassword = '';
   registroConfirmacion = '';
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private authService: AuthService) {}
 
-  // Mostrar / ocultar login
+  // Abrir/cerrar panel de login
   toggleLoginForm() {
     this.showLoginForm = !this.showLoginForm;
     this.showRegisterForm = false;
   }
 
-  // Cambiar a formulario registro
   showRegister() {
     this.showRegisterForm = true;
   }
 
-  // Cambiar a formulario login
   showLogin() {
     this.showRegisterForm = false;
   }
 
-  // Cerrar sesión
+  // Cerrar sesión (recibido desde Header)
   cerrarSesion() {
+    this.authService.cerrarSesion();
     this.usuarioLogueado = false;
     this.nombreUsuario = '';
-    localStorage.removeItem('usuarioId');
-    localStorage.removeItem('usuarioNombre');
   }
 
-  // Registrar usuario
+  // Registrar
   registrarUsuario() {
     const password = this.registroPassword;
+
     const passwordValida =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 
     if (!passwordValida) {
-      alert('La contraseña debe tener:\n- 8 caracteres\n- Una letra mayúscula\n- Una letra minúscula\n- Un número\n- Un carácter especial');
+      alert('La contraseña debe cumplir los requisitos.');
       return;
     }
 
@@ -82,19 +77,14 @@ export class AppComponent {
     };
 
     this.usuarioService.registrar(nuevoUsuario).subscribe({
-      next: (res) => {
-        alert('Usuario registrado con éxito');
-        this.showRegisterForm = false;
+      next: () => {
+        alert('Usuario registrado');
         this.showLoginForm = false;
+        this.showRegisterForm = false;
         this.clearForm();
       },
-      error: (err) => {
-        console.error('Error registro:', err);
-        if (err.error) {
-          alert('Error al registrar usuario: ' + err.error);
-        } else {
-          alert('Error al registrar usuario. Revisa la consola.');
-        }
+      error: err => {
+        alert('Error en el registro: ' + (err.error || ''));
       }
     });
   }
@@ -109,34 +99,26 @@ export class AppComponent {
     this.usuarioService.http.post('http://localhost:8080/api/usuarios/login', credenciales)
       .subscribe({
         next: (usuario: any) => {
-          localStorage.setItem('usuarioId', usuario.id.toString());
-          localStorage.setItem('usuarioNombre', usuario.nombre);
+          this.authService.setUsuario(usuario.id, usuario.nombre);
 
           this.usuarioLogueado = true;
           this.nombreUsuario = usuario.nombre;
-          this.showLoginForm = false;
 
+          this.showLoginForm = false;
           this.clearForm();
         },
-        error: err => {
-          console.error('Error login:', err);
-          if (err.error) {
-            alert('Error al iniciar sesión: ' + err.error);
-          } else {
-            alert('Credenciales incorrectas o usuario no encontrado.');
-          }
+        error: () => {
+          alert('Credenciales incorrectas.');
         }
       });
   }
 
-  // Limpiar campos login y registro
   private clearForm() {
+    this.loginEmail = '';
+    this.loginPassword = '';
     this.registroNombre = '';
     this.registroEmail = '';
     this.registroPassword = '';
     this.registroConfirmacion = '';
-
-    this.loginEmail = '';
-    this.loginPassword = '';
   }
 }

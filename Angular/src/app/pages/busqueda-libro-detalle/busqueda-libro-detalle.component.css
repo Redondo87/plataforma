@@ -20,7 +20,7 @@
 }
 
 .imagen {
-  flex: 0 0 250px; /* ancho fijo para que la imagen sea más grande */
+  flex: 0 0 250px;
   margin-left: -150px;
 }
 
@@ -38,7 +38,7 @@
 }
 
 button {
-  background-color: #5cb85c;;
+  background-color: #5cb85c;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
@@ -52,7 +52,10 @@ button:hover {
   background-color: #4cae4c;
 }
 
-/* Fondo del modal */
+/* ========================= */
+/*         MODAL             */
+/* ========================= */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -66,13 +69,12 @@ button:hover {
   z-index: 1000;
 }
 
-/* Contenedor del modal */
 .modal {
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
-  width: 400px;             /* más ancho */
-  height: 320px;            /* un poco más alto -> forma más cuadrada */
+  width: 400px;
+  height: 320px;
   max-width: 90%;
   text-align: center;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -81,7 +83,6 @@ button:hover {
   justify-content: space-between;
 }
 
-/* Contenedor horizontal de los campos */
 .campos-horizontal {
   display: flex;
   justify-content: space-between;
@@ -89,7 +90,6 @@ button:hover {
   margin: 1.5rem 0;
 }
 
-/* Cada campo (estado, puntuación) */
 .campo-horizontal {
   flex: 1;
   display: flex;
@@ -109,10 +109,9 @@ button:hover {
   border: 1px solid #ccc;
 }
 
-/* Botones */
-.modal-buttons { 
-  display: flex; 
-  justify-content: space-between; 
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
   gap: 1rem;
 }
 
@@ -132,11 +131,76 @@ button:hover {
   background-color: #4cae4c;
 }
 
-.modal-buttons .cancelar { 
-  background-color: #ccc; 
-  color: black; 
+.modal-buttons .cancelar {
+  background-color: #ccc;
+  color: black;
 }
 
 .modal-buttons .cancelar:hover {
   background-color: #aaa;
+}
+
+/* ===================================================== */
+/*                     📱 RESPONSIVE                     */
+/* ===================================================== */
+
+@media (max-width: 900px) {
+  .contenido-libro {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .descripcion {
+    text-align: left;
+    width: 100%;
+  }
+
+  .imagen {
+    margin-left: 0;
+    width: 60%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .imagen {
+    width: 70%;
+    max-width: 250px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .modal {
+    width: 95%;
+    height: auto;
+    padding: 1.2rem;
+  }
+
+  .campos-horizontal {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .imagen {
+    width: 80%;
+  }
+
+  button {
+    font-size: 0.85rem;
+  }
 }
