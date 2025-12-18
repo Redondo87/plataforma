@@ -3,11 +3,13 @@
   margin-top: 40px;
 }
 
+/* Menús principales */
 .botones-principales {
   display: flex;
   justify-content: center;
   gap: 30px;
   margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .btn-explorar {
@@ -22,9 +24,10 @@
 
 .btn-explorar:hover {
   background-color: #F7EFE5;
+  color: #222;
 }
 
-/* 🔽 Dropdown */
+/* Dropdown */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -36,10 +39,12 @@
   background-color: white;
   min-width: 240px;
   border-radius: 5px;
-  z-index: 1;
+  z-index: 10;
+  padding: 8px 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-.dropdown-content a {
+.dropdown-content a, .dropdown-content li a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
@@ -47,11 +52,93 @@
   text-align: left;
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover, .dropdown-content li a:hover {
   background-color: #f1f1f1;
 }
 
-/* Mostrar menú cuando pasamos el ratón */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+/* Secciones */
+.novedades {
+  max-width: 1000px;
+  margin: 25px auto;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.estado {
+  margin: 10px 0 0;
+}
+
+/* Cards horizontales centradas */
+.cards {
+  list-style: none;
+  padding: 0;
+  margin: 15px auto 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 180px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+  overflow: hidden;
+  text-align: left;
+}
+
+.card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+.card-info {
+  padding: 10px;
+}
+
+.card-titulo {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.card-sub {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Botón dentro de la card */
+.btn-card {
+  width: 100%;
+  background-color: #5cb85c;
+  color: white;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-card:hover {
+  background-color: #4cae4c;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .card {
+    width: 160px;
+  }
+
+  .card img {
+    height: 220px;
+  }
 }

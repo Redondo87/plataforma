@@ -1,25 +1,80 @@
 <div class="home-container">
+
+  <!-- MENÚS -->
   <div class="botones-principales">
-    <!-- 🔽 Menú desplegable Libros -->
+
+    <!-- Libros -->
     <div class="dropdown">
       <button class="btn-explorar">📚 Libros</button>
       <div class="dropdown-content">
-        <li><a routerLink="/busqueda-libros">🔍 Búsqueda de Libros</a></li>
-        <li><a routerLink="/mejores-libros">⭐ Mejores Libros</a></li>
-        <li><a routerLink="/reseñas-libros">✍️ Reseñas</a></li>
-        <li><a routerLink="/recomendaciones-libros">📖 Recomendaciones</a></li>
+        <a routerLink="/busqueda-libros">🔍 Búsqueda de Libros</a>
+        <a routerLink="/mejores-libros">⭐ Mejores Libros</a>
+        <a routerLink="/reseñas-libros">✍️ Reseñas</a>
+        <a routerLink="/recomendaciones-libros">📖 Recomendaciones</a>
       </div>
     </div>
 
-    <!-- 🔽 Menú desplegable Series/Películas -->
+    <!-- Series / Películas -->
     <div class="dropdown">
       <button class="btn-explorar">🎬 Series/Películas</button>
       <div class="dropdown-content">
-        <a routerLink="/series/busqueda">🔎 Búsqueda de series/películas</a>
-        <a routerLink="/series/mejores">⭐ Mejores series/películas</a>
+        <a routerLink="/series/busqueda">🔎 Búsqueda</a>
+        <a routerLink="/series/mejores">⭐ Mejores</a>
         <a routerLink="/series/resenas">✍️ Reseñas</a>
         <a routerLink="/series/recomendaciones">📖 Recomendaciones</a>
       </div>
     </div>
+
   </div>
+
+  <!-- ⭐ LIBROS -->
+  <section class="novedades">
+    <h2>⭐ Libros mejor valorados</h2>
+
+    <p *ngIf="cargandoLibros">Cargando libros...</p>
+
+    <ul *ngIf="!cargandoLibros && topLibros.length > 0" class="cards">
+      <li *ngFor="let libro of topLibros" class="card">
+        <img [src]="libro.imagen" [alt]="libro.titulo">
+        <div class="card-info">
+          <strong>{{ libro.titulo }}</strong>
+          <span>⭐ {{ libro.promedio | number:'1.1-1' }}</span>
+          <button class="btn-card" (click)="irBusquedaLibros()">Ver / añadir</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 🎬 PELÍCULAS -->
+  <section class="novedades">
+    <h2>🎬 Próximos estrenos</h2>
+
+    <ul class="cards">
+      <li *ngFor="let peli of upcomingMovies" class="card">
+        <img [src]="peli.imagen" [alt]="peli.titulo">
+        <div class="card-info">
+          <strong>{{ peli.titulo }}</strong>
+          <span>{{ peli.fecha }}</span>
+          <button class="btn-card" (click)="irBusquedaSeries()">Ver / añadir</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 📺 SERIES -->
+  <section class="novedades">
+    <h2>📺 Series emitidas hoy</h2>
+
+    <ul class="cards">
+      <li *ngFor="let serie of airingTodaySeries" class="card">
+        <img [src]="serie.imagen" [alt]="serie.titulo">
+        <div class="card-info">
+          <strong>{{ serie.titulo }}</strong>
+          <span>{{ serie.fecha }}</span>
+          <button class="btn-card" (click)="irBusquedaSeries()">Ver / añadir</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
 </div>
