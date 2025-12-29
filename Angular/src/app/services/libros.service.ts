@@ -10,12 +10,12 @@ export class LibrosService {
 
   constructor(private http: HttpClient) {}
 
-  // ⭐ TOP libros (backend propio)
+  // TOP libros (backend propio)
   obtenerTopLibros(): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/top`);
   }
 
-  // 📖 DETALLE de libro (Google Books, usado en libro-detalle)
+  // DETALLE de libro (Google Books, usado en libro-detalle)
   obtenerLibroPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.GOOGLE_BOOKS_URL}/${id}`);
   }

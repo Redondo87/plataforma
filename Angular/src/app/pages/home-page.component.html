@@ -1,6 +1,6 @@
 <div class="home-container">
 
-  <!-- MENÚS -->
+  <!-- BOTONES -->
   <div class="botones-principales">
 
     <!-- Libros -->
@@ -18,8 +18,8 @@
     <div class="dropdown">
       <button class="btn-explorar">🎬 Series/Películas</button>
       <div class="dropdown-content">
-        <a routerLink="/series/busqueda">🔎 Búsqueda</a>
-        <a routerLink="/series/mejores">⭐ Mejores</a>
+        <a routerLink="/series/busqueda">🔎 Búsqueda de series/películas</a>
+        <a routerLink="/series/mejores">⭐ Mejores series/películas</a>
         <a routerLink="/series/resenas">✍️ Reseñas</a>
         <a routerLink="/series/recomendaciones">📖 Recomendaciones</a>
       </div>
@@ -27,51 +27,67 @@
 
   </div>
 
-  <!-- ⭐ LIBROS -->
+  <!--LIBROS -->
   <section class="novedades">
-    <h2>⭐ Libros mejor valorados</h2>
+    <h2>⭐Libros mejor valorados</h2>
 
-    <p *ngIf="cargandoLibros">Cargando libros...</p>
+    <p *ngIf="cargandoLibros">Cargando libros…</p>
 
     <ul *ngIf="!cargandoLibros && topLibros.length > 0" class="cards">
       <li *ngFor="let libro of topLibros" class="card">
-        <img [src]="libro.imagen" [alt]="libro.titulo">
+        <a
+          [routerLink]="['/busqueda-libro', libro.libroId]"
+          class="card-link">
+          <img
+            [src]="libro.imagen"
+            [alt]="'Portada de ' + libro.titulo">
+        </a>
+
         <div class="card-info">
           <strong>{{ libro.titulo }}</strong>
           <span>⭐ {{ libro.promedio | number:'1.1-1' }}</span>
-          <button class="btn-card" (click)="irBusquedaLibros()">Ver / añadir</button>
         </div>
       </li>
     </ul>
   </section>
 
-  <!-- 🎬 PELÍCULAS -->
+  <!-- PELÍCULAS -->
   <section class="novedades">
-    <h2>🎬 Próximos estrenos</h2>
+    <h2>⭐ Películas mejor valoradas</h2>
 
-    <ul class="cards">
-      <li *ngFor="let peli of upcomingMovies" class="card">
-        <img [src]="peli.imagen" [alt]="peli.titulo">
+    <p *ngIf="cargandoPeliculas">Cargando películas…</p>
+
+    <ul *ngIf="!cargandoPeliculas && topMovies.length > 0" class="cards">
+      <li *ngFor="let peli of topMovies" class="card">
+        <img
+          [src]="peli.imagen"
+          [alt]="peli.titulo"
+          class="clickable"
+          (click)="verDetallePelicula(peli.id)">
         <div class="card-info">
           <strong>{{ peli.titulo }}</strong>
-          <span>{{ peli.fecha }}</span>
-          <button class="btn-card" (click)="irBusquedaSeries()">Ver / añadir</button>
+          <span>⭐ {{ peli.puntuacion }}</span>
         </div>
       </li>
     </ul>
   </section>
 
-  <!-- 📺 SERIES -->
+  <!-- SERIES-->
   <section class="novedades">
-    <h2>📺 Series emitidas hoy</h2>
+    <h2>⭐ Series mejor valoradas</h2>
 
-    <ul class="cards">
-      <li *ngFor="let serie of airingTodaySeries" class="card">
-        <img [src]="serie.imagen" [alt]="serie.titulo">
+    <p *ngIf="cargandoSeries">Cargando series…</p>
+
+    <ul *ngIf="!cargandoSeries && topSeries.length > 0" class="cards">
+      <li *ngFor="let serie of topSeries" class="card">
+        <img
+          [src]="serie.imagen"
+          [alt]="serie.titulo"
+          class="clickable"
+          (click)="verDetalleSerie(serie.id)">
         <div class="card-info">
           <strong>{{ serie.titulo }}</strong>
-          <span>{{ serie.fecha }}</span>
-          <button class="btn-card" (click)="irBusquedaSeries()">Ver / añadir</button>
+          <span>⭐ {{ serie.puntuacion }}</span>
         </div>
       </li>
     </ul>

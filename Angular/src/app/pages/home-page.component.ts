@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
-import { LibrosService } from '../services/libros.service';
 import { TmdbService } from '../services/tmdb.service';
 
 @Component({
@@ -14,74 +14,85 @@ import { TmdbService } from '../services/tmdb.service';
 })
 export class HomePageComponent implements OnInit {
 
-  // 📚 Libros (backend propio)
+  // Libros 
   topLibros: any[] = [];
   cargandoLibros = true;
 
-  // 🎬 Películas
-  upcomingMovies: any[] = [];
+  // Películas 
+  topMovies: any[] = [];
   cargandoPeliculas = true;
 
-  // 📺 Series
-  airingTodaySeries: any[] = [];
+  // Series 
+  topSeries: any[] = [];
   cargandoSeries = true;
 
   constructor(
-    private librosService: LibrosService,
-    private tmdbService: TmdbService,
+    private http: HttpClient,
+    private tmdb: TmdbService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.cargarTopLibros();
-    this.cargarPeliculas();
-    this.cargarSeries();
+    this.cargarLibros();
+    this.cargarTopPeliculas();
+    this.cargarTopSeries();
   }
 
-  // ------------------- LIBROS -------------------
-  cargarTopLibros() {
+  // LIBROS 
+  cargarLibros() {
     this.cargandoLibros = true;
-    this.librosService.obtenerTopLibros().subscribe({
+
+    this.http
+      .get<any[]>('http://localhost:8080/api/libros-usuarios/top')
+      .subscribe({
+        next: data => {
+          this.topLibros = data.slice(0, 5);
+          this.cargandoLibros = false;
+        },
+        error: err => {
+          console.error('Error cargando libros', err);
+          this.topLibros = [];
+          this.cargandoLibros = false;
+        }
+      });
+  }
+
+  // PELÍCULAS 
+  cargarTopPeliculas() {
+    this.tmdb.topRatedMovies(5).subscribe({
       next: data => {
-        this.topLibros = data.slice(0, 5);
-        this.cargandoLibros = false;
+        this.topMovies = data;
+        this.cargandoPeliculas = false;
       },
       error: err => {
-        console.error('Error cargando libros', err);
-        this.topLibros = [];
-        this.cargandoLibros = false;
+        console.error('Error cargando películas', err);
+        this.topMovies = [];
+        this.cargandoPeliculas = false;
       }
     });
   }
 
-  // ------------------- PELÍCULAS -------------------
-  cargarPeliculas() {
-    this.tmdbService.upcomingMovies(5).subscribe({
+  //SERIES
+  cargarTopSeries() {
+    this.tmdb.topRatedSeries(5).subscribe({
       next: data => {
-        this.upcomingMovies = data;
-        this.cargandoPeliculas = false;
-      },
-      error: () => this.cargandoPeliculas = false
-    });
-  }
-
-  // ------------------- SERIES -------------------
-  cargarSeries() {
-    this.tmdbService.airingTodaySeries(5).subscribe({
-      next: data => {
-        this.airingTodaySeries = data;
+        this.topSeries = data;
         this.cargandoSeries = false;
       },
-      error: () => this.cargandoSeries = false
+      error: err => {
+        console.error('Error cargando series', err);
+        this.topSeries = [];
+        this.cargandoSeries = false;
+      }
     });
   }
 
-  // ------------------- NAVEGACIÓN -------------------
-  irBusquedaLibros() {
-    this.router.navigate(['/mejores-libros']);
+  //NAVEGACIÓN
+  verDetallePelicula(id: number) {
+    this.router.navigate(['/series/detalle/movie', id]);
   }
 
-  irBusquedaSeries() {
-    this.router.navigate(['/series/mejores']);
+  verDetalleSerie(id: number) {
+    this.router.navigate(['/series/detalle/tv', id]);
   }
 }
