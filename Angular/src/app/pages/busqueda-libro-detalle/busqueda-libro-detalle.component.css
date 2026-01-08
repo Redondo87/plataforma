@@ -1,3 +1,7 @@
+/* ============================
+   DETALLE LIBRO (PÁGINA)
+============================ */
+
 .detalle-libro {
   display: flex;
   flex-direction: column;
@@ -37,6 +41,7 @@
   margin-top: 1rem;
 }
 
+/* Botón general */
 button {
   background-color: #5cb85c;
   color: white;
@@ -52,9 +57,15 @@ button:hover {
   background-color: #4cae4c;
 }
 
-/* ========================= */
-/*         MODAL             */
-/* ========================= */
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* ============================
+   MODAL
+============================ */
 
 .modal-overlay {
   position: fixed;
@@ -73,21 +84,27 @@ button:hover {
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
-  width: 400px;
-  height: 320px;
-  max-width: 90%;
-  text-align: center;
+
+  width: 520px;        /* un poco más ancho para reseñas */
+  max-width: 92%;
+
+  max-height: 85vh;    /* ✅ evita que se salga de la pantalla */
+  overflow-y: auto;    /* ✅ scroll interno si hay reseñas */
+
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1rem;
+
+  text-align: center;
 }
 
 .campos-horizontal {
   display: flex;
   justify-content: space-between;
   gap: 1.2rem;
-  margin: 1.5rem 0;
+  margin: 0.5rem 0 0.5rem 0;
 }
 
 .campo-horizontal {
@@ -109,6 +126,7 @@ button:hover {
   border: 1px solid #ccc;
 }
 
+/* Botones modal */
 .modal-buttons {
   display: flex;
   justify-content: space-between;
@@ -140,9 +158,65 @@ button:hover {
   background-color: #aaa;
 }
 
-/* ===================================================== */
-/*                     📱 RESPONSIVE                     */
-/* ===================================================== */
+/* ============================
+   RESEÑAS (DENTRO DEL MODAL)
+============================ */
+
+.reseñas {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  text-align: left;
+}
+
+.reseñas h3 {
+  margin: 0.2rem 0 0.8rem 0;
+}
+
+.resena {
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.contenido-resena {
+  margin: 0 0 0.4rem 0;
+}
+
+.autor-resena {
+  color: #666;
+}
+
+.estado {
+  color: #666;
+  margin: 0.6rem 0;
+}
+
+.nueva-resena {
+  margin-top: 1rem;
+}
+
+.nueva-resena h4 {
+  margin: 0 0 0.6rem 0;
+}
+
+.nueva-resena textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
 
 @media (max-width: 900px) {
   .contenido-libro {
@@ -176,8 +250,8 @@ button:hover {
 
   .modal {
     width: 95%;
-    height: auto;
     padding: 1.2rem;
+    max-height: 88vh;
   }
 
   .campos-horizontal {

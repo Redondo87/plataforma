@@ -1,35 +1,34 @@
-
-<div *ngIf="libro" class="detalle-libro">
-  <h2>{{ libro.titulo }}</h2>
+<!-- LIBRO -->
+<div *ngIf="libro as l" class="detalle-libro">
+  <h2>{{ l.titulo }}</h2>
 
   <div class="contenido-libro">
     <div class="imagen">
       <img
-        [src]="libro.imagen || '/assets/images/imagenNoDisponible.png'"
+        [src]="l.imagen || '/assets/images/imagenNoDisponible.png'"
         alt="Portada"
         (error)="reemplazarImagen($event)"
       />
     </div>
 
     <div class="descripcion">
-      <p><strong>Autor:</strong> {{ libro.autor }}</p>
+      <p><strong>Autor:</strong> {{ l.autor }}</p>
       <strong>Descripción:</strong>
-      <p [innerHTML]="libro.descripcion"></p>
+      <p [innerHTML]="l.descripcion"></p>
     </div>
   </div>
 
   <div class="boton-centro">
-    <button (click)="abrirModal()">
-      Añadir a mi lista
-    </button>
+    <button (click)="abrirModal()">Añadir a mi lista</button>
   </div>
 </div>
 
-<!-- Modal -->
+<!-- MODAL -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal">
-    <h3>{{ libro.titulo }}</h3>
+    <h3>{{ libro?.titulo }}</h3>
 
+    <!-- FORMULARIO AÑADIR -->
     <div class="campos-horizontal">
       <div class="campo-horizontal">
         <label>Estado:</label>
@@ -49,8 +48,50 @@
     </div>
 
     <div class="modal-buttons">
-      <button (click)="guardarLibro()">Guardar</button>
+      <button class="guardar" (click)="guardarLibro()">Guardar</button>
       <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
     </div>
+
+    <!-- RESEÑAS-->
+    <section class="reseñas">
+      <h4>📝 Reseñas de usuarios</h4>
+
+      <p *ngIf="cargandoResenas" class="estado">Cargando reseñas...</p>
+
+      <div *ngIf="!cargandoResenas && resenas.length > 0; else sinResenas">
+        <div class="resena" *ngFor="let r of resenas">
+          <p class="contenido-resena">“{{ r.contenido }}”</p>
+          <small class="autor-resena">
+            Usuario #{{ r.usuarioId }} · {{ r.fechaCreacion | date:'shortDate' }}
+          </small>
+        </div>
+      </div>
+
+      <ng-template #sinResenas>
+        <p *ngIf="!cargandoResenas" class="estado">
+          Todavía no hay reseñas para este libro.
+        </p>
+      </ng-template>
+
+      <!-- ESCRIBIR RESEÑA -->
+      <div class="nueva-resena" *ngIf="authService.estaLogueado(); else loginAviso">
+        <h5>Escribe tu reseña</h5>
+
+        <textarea
+          [(ngModel)]="nuevaResena"
+          rows="4"
+          placeholder="Comparte tu opinión sobre este libro..."
+        ></textarea>
+
+        <button (click)="guardarResena()" [disabled]="!nuevaResena.trim()">
+          Publicar reseña
+        </button>
+      </div>
+
+      <ng-template #loginAviso>
+        <p class="estado">Inicia sesión para escribir una reseña.</p>
+      </ng-template>
+    </section>
+
   </div>
 </div>

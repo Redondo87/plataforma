@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; 
+
+import { AuthService } from '../../services/auth.service';
+import { ResenasService, Resena } from '../../services/resenas.service';
 
 @Component({
   selector: 'app-busqueda-libro-detalle',
@@ -13,11 +15,18 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./busqueda-libro-detalle.component.css']
 })
 export class BusquedaLibroDetalleComponent implements OnInit {
+
   libro: any = null;
-  libroSeleccionado: any = null; 
+
+  // MODAL
   mostrarModal = false;
   estadoSeleccionado = 'lectura';
   puntuacion: number = 1;
+
+  // RESEÑAS
+  resenas: Resena[] = [];
+  nuevaResena = '';
+  cargandoResenas = false;
 
   private apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
   private apiUrl = 'http://localhost:8080/api/libros-usuarios';
@@ -25,16 +34,20 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    public authService: AuthService // 👈 público para usar en el HTML
+    public authService: AuthService,
+    private resenasService: ResenasService
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) this.obtenerLibro(id);
+    // 👇 reseñas NO se cargan aquí
   }
 
+  // LIBRO 
   obtenerLibro(id: string) {
     const url = `https://www.googleapis.com/books/v1/volumes/${id}?key=${this.apiKey}&langRestrict=es`;
+
     this.http.get<any>(url).subscribe(data => {
       const info = data.volumeInfo;
       this.libro = {
@@ -47,27 +60,39 @@ export class BusquedaLibroDetalleComponent implements OnInit {
     });
   }
 
+  reemplazarImagen(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = '/assets/images/imagenNoDisponible.png';
+  }
+
+  // MODAL 
   abrirModal() {
     if (!this.authService.estaLogueado()) {
       alert('Debes iniciar sesión para añadir libros.');
-      this.mostrarModal = false;
       return;
     }
+
     this.mostrarModal = true;
+
+    // reseñas solo cuando se abre el modal
+    if (this.libro?.id) {
+      this.cargarResenas(this.libro.id);
+    }
   }
 
   cerrarModal() {
     this.mostrarModal = false;
+    this.nuevaResena = '';
   }
 
   guardarLibro() {
     const usuarioId = this.authService.getUsuarioId();
 
     if (!usuarioId) {
-      alert('Debes iniciar sesión para añadir libros.');
-      this.mostrarModal = false;
-      return; 
+      alert('Debes iniciar sesión.');
+      return;
     }
+    if (!this.libro?.id) return;
 
     const datos = {
       usuarioId,
@@ -88,8 +113,50 @@ export class BusquedaLibroDetalleComponent implements OnInit {
     });
   }
 
-  reemplazarImagen(event: Event) {
-    const elemento = event.target as HTMLImageElement;
-    elemento.src = '/assets/images/imagenNoDisponible.png';
+  //  RESEÑAS 
+  cargarResenas(libroId: string) {
+    this.cargandoResenas = true;
+
+    this.resenasService.obtenerResenas('libro', libroId).subscribe({
+      next: data => {
+        this.resenas = data;
+        this.cargandoResenas = false;
+      },
+      error: err => {
+        console.error('Error cargando reseñas', err);
+        this.resenas = [];
+        this.cargandoResenas = false;
+      }
+    });
+  }
+
+  guardarResena() {
+    const usuarioId = this.authService.getUsuarioId();
+    if (!usuarioId) {
+      alert('Debes iniciar sesión para escribir una reseña.');
+      return;
+    }
+    if (!this.libro?.id) return;
+
+    const contenido = this.nuevaResena.trim();
+    if (!contenido) return;
+
+    const resena: Resena = {
+      usuarioId,
+      tipo: 'libro',
+      itemId: this.libro.id,
+      contenido
+    };
+
+    this.resenasService.crearResena(resena).subscribe({
+      next: () => {
+        this.nuevaResena = '';
+        this.cargarResenas(this.libro.id);
+      },
+      error: err => {
+        console.error('Error guardando reseña', err);
+        alert('No se pudo guardar la reseña.');
+      }
+    });
   }
 }
