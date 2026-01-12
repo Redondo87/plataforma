@@ -23,12 +23,11 @@
   </div>
 </div>
 
-
 <!-- MODAL -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal">
 
-    <h3>{{ item.title || item.name }}</h3>
+    <h3>{{ item?.title || item?.name }}</h3>
 
     <!-- SOLO para series -->
     <div *ngIf="esSerie" class="campos-horizontal">
@@ -60,6 +59,36 @@
         <input type="number" [(ngModel)]="puntuacion" min="1" max="10" />
       </div>
     </div>
+
+    <!-- ✅ RESEÑAS (dentro del modal) -->
+    <section class="reseñas">
+      <h4>📝 Reseñas de usuarios</h4>
+
+      <div *ngIf="resenas.length > 0; else sinResenas">
+        <div class="resena" *ngFor="let r of resenas">
+          <p class="contenido-resena">“{{ r.contenido }}”</p>
+          <small class="autor-resena">
+            Usuario #{{ r.usuarioId }} · {{ r.fechaCreacion | date:'shortDate' }}
+          </small>
+        </div>
+      </div>
+
+      <ng-template #sinResenas>
+        <p class="estado">Todavía no hay reseñas para este título.</p>
+      </ng-template>
+
+      <div class="nueva-resena" *ngIf="authService.estaLogueado()">
+        <textarea
+          [(ngModel)]="nuevaResena"
+          rows="3"
+          placeholder="Escribe tu reseña..."
+        ></textarea>
+
+        <button (click)="guardarResena()" [disabled]="!nuevaResena.trim()">
+          Publicar reseña
+        </button>
+      </div>
+    </section>
 
     <div class="modal-buttons">
       <button (click)="guardarItem()">Guardar</button>
