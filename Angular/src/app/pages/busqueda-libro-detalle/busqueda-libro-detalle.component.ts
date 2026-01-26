@@ -131,32 +131,33 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   }
 
   guardarResena() {
-    const usuarioId = this.authService.getUsuarioId();
-    if (!usuarioId) {
-      alert('Debes iniciar sesión para escribir una reseña.');
-      return;
-    }
-    if (!this.libro?.id) return;
-
-    const contenido = this.nuevaResena.trim();
-    if (!contenido) return;
-
-    const resena: Resena = {
-      usuarioId,
-      tipo: 'libro',
-      itemId: this.libro.id,
-      contenido
-    };
-
-    this.resenasService.crearResena(resena).subscribe({
-      next: () => {
-        this.nuevaResena = '';
-        this.cargarResenas(this.libro.id);
-      },
-      error: err => {
-        console.error('Error guardando reseña', err);
-        alert('No se pudo guardar la reseña.');
-      }
-    });
+  const usuarioId = this.authService.getUsuarioId();
+  if (!usuarioId) {
+    alert('Debes iniciar sesión para escribir una reseña.');
+    return;
   }
+  if (!this.libro?.id) return;
+
+  const contenido = this.nuevaResena.trim();
+  if (!contenido) return;
+
+  const resena: Resena = {
+    usuarioId,
+    tipo: 'libro',
+    itemId: this.libro.id,
+    contenido,
+    imagenUrl: this.libro.imagen || '/assets/images/imagenNoDisponible.png'
+  };
+
+  this.resenasService.crearResena(resena).subscribe({
+    next: () => {
+      this.nuevaResena = '';
+      this.cargarResenas(this.libro.id);
+    },
+    error: err => {
+      console.error('Error guardando reseña', err);
+      alert('No se pudo guardar la reseña.');
+    }
+  });
+ }
 }

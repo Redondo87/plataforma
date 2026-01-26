@@ -1,0 +1,30 @@
+<div class="page">
+  <div class="tabs">
+    <button (click)="cargarPeliculas()" [class.activo]="pestana === 'peliculas'">
+      Películas
+    </button>
+
+    <button (click)="cargarSeries()" [class.activo]="pestana === 'series'">
+      Series
+    </button>
+  </div>
+
+  <p *ngIf="cargando" class="estado">Cargando recomendaciones…</p>
+
+  <p *ngIf="!cargando && items.length === 0" class="estado">
+    No hay recomendaciones disponibles ahora.
+  </p>
+
+  <div *ngIf="!cargando && items.length > 0" class="grid">
+    <article class="card" *ngFor="let it of items">
+      <a [routerLink]="linkDetalle(it)" class="imgwrap">
+        <img [src]="it.imagen" [alt]="it.titulo">
+      </a>
+
+      <div class="info">
+        <strong class="titulo">{{ it.titulo }}</strong>
+        <span class="tipo">{{ it.tipo }}</span>
+      </div>
+    </article>
+  </div>
+</div>

@@ -7,40 +7,83 @@
 
 <div class="main-container">
 
-  <div *ngIf="showLoginForm" class="login-dropdown">
+  <!-- COLUMNA IZQUIERDA (FONDO BEIGE) -->
+  <aside class="login-dropdown" *ngIf="showLoginForm">
+    <!-- CAJA DEL FORMULARIO (se mantiene arriba) -->
+    <div class="login-box">
 
-    <ng-container *ngIf="!showRegisterForm; else registerForm">
-      <h2>Inicia sesión</h2>
+      <ng-container *ngIf="!showRegisterForm; else registerForm">
+        <h2>Inicia sesión</h2>
 
-      <form (submit)="loginUsuario(); $event.preventDefault()">
-        <input type="email" [(ngModel)]="loginEmail" name="loginEmail" placeholder="Correo" />
-        <input type="password" [(ngModel)]="loginPassword" name="loginPassword" placeholder="Contraseña" />
-        <button type="submit">Entrar</button>
-      </form>
+        <form (submit)="loginUsuario(); $event.preventDefault()">
+          <input
+            type="email"
+            [(ngModel)]="loginEmail"
+            name="loginEmail"
+            placeholder="Correo"
+          />
 
-      <p>¿No tienes cuenta?
-        <a (click)="showRegister()" style="cursor:pointer;color:blue;">Regístrate aquí</a>
-      </p>
-    </ng-container>
+          <input
+            type="password"
+            [(ngModel)]="loginPassword"
+            name="loginPassword"
+            placeholder="Contraseña"
+          />
 
-    <ng-template #registerForm>
-      <h2>Crear cuenta</h2>
+          <button type="submit">Entrar</button>
+        </form>
 
-      <form (submit)="registrarUsuario(); $event.preventDefault()">
-        <input type="text" [(ngModel)]="registroNombre" name="nombre" placeholder="Usuario" /><br />
-        <input type="email" [(ngModel)]="registroEmail" name="email" placeholder="Correo" /><br />
-        <input type="password" [(ngModel)]="registroPassword" name="password" placeholder="Contraseña" /><br />
-        <input type="password" [(ngModel)]="registroConfirmacion" name="confirmPassword" placeholder="Confirmar contraseña" /><br />
-        <button type="submit">Registrarse</button>
-      </form>
+        <p>
+          ¿No tienes cuenta?
+          <a (click)="showRegister()" style="cursor:pointer;color:blue;">Regístrate aquí</a>
+        </p>
+      </ng-container>
 
-      <p>¿Ya tienes cuenta?
-        <a (click)="showLogin()" style="cursor:pointer;color:blue;">Inicia sesión</a>
-      </p>
-    </ng-template>
+      <ng-template #registerForm>
+        <h2>Crear cuenta</h2>
 
-  </div>
+        <form (submit)="registrarUsuario(); $event.preventDefault()">
+          <input
+            type="text"
+            [(ngModel)]="registroNombre"
+            name="nombre"
+            placeholder="Usuario"
+          />
 
+          <input
+            type="email"
+            [(ngModel)]="registroEmail"
+            name="email"
+            placeholder="Correo"
+          />
+
+          <input
+            type="password"
+            [(ngModel)]="registroPassword"
+            name="password"
+            placeholder="Contraseña"
+          />
+
+          <input
+            type="password"
+            [(ngModel)]="registroConfirmacion"
+            name="confirmPassword"
+            placeholder="Confirmar contraseña"
+          />
+
+          <button type="submit">Registrarse</button>
+        </form>
+
+        <p>
+          ¿Ya tienes cuenta?
+          <a (click)="showLogin()" style="cursor:pointer;color:blue;">Inicia sesión</a>
+        </p>
+      </ng-template>
+
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
@@ -48,4 +91,3 @@
 </div>
 
 <app-footer></app-footer>
-

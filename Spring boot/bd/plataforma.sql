@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS `libros_usuarios` (
   PRIMARY KEY (`id`),
   KEY `libros_usuarios_ibfk_1` (`usuario_id`),
   CONSTRAINT `libros_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.libros_usuarios: ~15 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.libros_usuarios: ~11 rows (aproximadamente)
 REPLACE INTO `libros_usuarios` (`id`, `usuario_id`, `libro_id`, `estado`, `puntuacion`, `fecha_creacion`) VALUES
 	(2, 1, 'MzbHg3L4JuIC', 'terminado', 9, '2025-10-19 19:20:18'),
 	(3, 1, 'lopEEQAAQBAJ', 'lectura', 8, '2025-10-20 15:36:30'),
@@ -48,7 +48,8 @@ REPLACE INTO `libros_usuarios` (`id`, `usuario_id`, `libro_id`, `estado`, `puntu
 	(22, 1, 'zttSEAAAQBAJ', 'terminado', 5, '2025-12-09 12:19:41'),
 	(23, 1, 'ZSdpEQAAQBAJ', 'terminado', 6, '2025-12-10 19:34:46'),
 	(24, 1, '8EKmDQAAQBAJ', 'terminado', 10, '2025-12-11 20:03:03'),
-	(25, 1, 'hcIgEQAAQBAJ', 'terminado', 8, '2025-12-22 17:13:14');
+	(25, 1, 'hcIgEQAAQBAJ', 'terminado', 8, '2025-12-22 17:13:14'),
+	(26, 1, 'On7xEAAAQBAJ', 'lectura', 9, '2026-01-08 21:22:20');
 
 -- Volcando estructura para tabla plataforma.resenas
 CREATE TABLE IF NOT EXISTS `resenas` (
@@ -59,12 +60,17 @@ CREATE TABLE IF NOT EXISTS `resenas` (
   `contenido` text NOT NULL,
   `puntuacion` int(11) DEFAULT NULL,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `imagen_url` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `resenas_ibfk_1` (`usuario_id`),
   CONSTRAINT `resenas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.resenas: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.resenas: ~3 rows (aproximadamente)
+REPLACE INTO `resenas` (`id`, `usuario_id`, `item_id`, `tipo`, `contenido`, `puntuacion`, `fecha_creacion`, `imagen_url`) VALUES
+	(1, 1, 'On7xEAAAQBAJ', 'libro', 'Entretenido, se lee muy rápido, nada es lo que parece', NULL, '2026-01-08 21:21:34', NULL),
+	(2, 1, '671', 'pelicula', 'Muy entretenida', NULL, '2026-01-12 19:10:42', NULL),
+	(3, 1, '7897', 'serie', 'La serie que muestra nuestra vida. Con imágenes reales. Buenas tramas y buenos actores pero las primeras temporadas son las mejores.', NULL, '2026-01-14 18:55:04', NULL);
 
 -- Volcando estructura para tabla plataforma.series_usuarios
 CREATE TABLE IF NOT EXISTS `series_usuarios` (
@@ -81,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `series_usuarios` (
   PRIMARY KEY (`id`),
   KEY `series_usuarios_ibfk_1` (`usuario_id`),
   CONSTRAINT `series_usuarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla plataforma.series_usuarios: ~9 rows (aproximadamente)
+-- Volcando datos para la tabla plataforma.series_usuarios: ~8 rows (aproximadamente)
 REPLACE INTO `series_usuarios` (`id`, `usuario_id`, `item_id`, `titulo`, `tipo`, `estado`, `puntuacion`, `temporada`, `capitulo`, `fecha_creacion`) VALUES
 	(1, 1, 1311031, 'Guardianes de la noche: Kimetsu no Yaiba La fortaleza infinita', 'pelicula', 'terminado', 7, NULL, NULL, '2025-11-23 19:10:06'),
 	(2, 1, 230069, 'Respira', 'serie', 'viendo', 8, 1, 10, '2025-11-25 20:13:21'),
@@ -93,7 +99,8 @@ REPLACE INTO `series_usuarios` (`id`, `usuario_id`, `item_id`, `titulo`, `tipo`,
 	(7, 1, 1396, 'Breaking Bad', 'serie', 'abandonado', 4, NULL, NULL, '2025-12-10 16:54:08'),
 	(8, 1, 37854, 'One Piece', 'serie', 'viendo', 7, NULL, NULL, '2025-12-11 14:57:05'),
 	(9, 1, 37854, 'One Piece', 'serie', 'terminado', 7, NULL, NULL, '2025-12-11 14:58:00'),
-	(10, 1, 278, 'Cadena perpetua', 'pelicula', 'pendiente', 6, NULL, NULL, '2025-12-23 13:06:10');
+	(10, 1, 278, 'Cadena perpetua', 'pelicula', 'pendiente', 6, NULL, NULL, '2025-12-23 13:06:10'),
+	(11, 1, 7897, 'Cuéntame cómo pasó', 'serie', 'viendo', 7, 25, 12, '2026-01-14 18:55:08');
 
 -- Volcando estructura para tabla plataforma.usuario
 CREATE TABLE IF NOT EXISTS `usuario` (

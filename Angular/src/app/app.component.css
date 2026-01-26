@@ -1,51 +1,57 @@
 :host {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* toda la altura del viewport */
+  min-height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 /* Contenedor entre header y footer */
 .main-container {
   display: flex;
   flex: 1;
-  flex-direction: row;
-  height: 100%;
+  min-height: calc(100vh - 140px); 
   box-sizing: border-box;
-  flex-direction: row;
-  min-height: calc(100vh - 140px);
 }
 
-/* Formulario izquierdo */
+/* Columna izquierda  */
 .login-dropdown {
   width: 300px;
   background-color: #F7EFE5;
-  padding: 20px;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   display: flex;
+  align-items: flex-start;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.login-box {
+  width: 100%;
+  max-height: calc(100vh - 180px); 
+  overflow-y: auto;
+
+  /* siempre arriba */
+  margin-top: 0;
+
+  display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 1rem;
+
   font-size: 1.1rem;
 }
 
-.login-dropdown label {
-  font-weight: 600;
-  margin-bottom: 6px;
-  display: block;
-}
-
+/* Inputs */
 .login-dropdown input {
   width: 100%;
   padding: 10px;
   font-size: 1rem;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.9rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
 
+/* Botones */
 .login-dropdown button {
   padding: 12px;
   font-size: 1rem;
@@ -54,10 +60,11 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: 100%;
 }
 
 .login-dropdown button:hover {
-  background-color:#CBB6A1;
+  background-color: #CBB6A1;
 }
 
 /* Contenido principal */
@@ -66,93 +73,26 @@
   padding: 2rem;
   background-color: #ffffff;
   box-sizing: border-box;
+  overflow: auto;
 }
 
-/* Inicia sesión*/
-.form-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .login-dropdown {
+    width: 100%;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .login-box {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .main-content {
+    overflow: visible;
+  }
 }
-
-.login-dropdown form input {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.login-dropdown form button {
-  background-color: #d8c9b1;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 1rem;
-  width: 100%;
-}
-
-/* Desplegable Apis*/
-
-.fullscreen-search {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.97);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  overflow-y: auto;
-}
-
-.search-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 80%;
-  max-width: 600px;
-  margin-bottom: 2rem;
-}
-
-.search-input {
-  flex: 1;
-  padding: 1rem;
-  font-size: 1.2rem;
-  border: none;
-  outline: none;
-  background-color: #f7efe5;
-  border-radius: 8px;
-}
-
-.close-icon {
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-}
-
-.resultados {
-  width: 80%;
-  max-width: 600px;
-}
-
-.resultado {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  background: #f5f5f5;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.resultado img {
-  height: 80px;
-  border-radius: 4px;
-  object-fit: cover;
-}
-

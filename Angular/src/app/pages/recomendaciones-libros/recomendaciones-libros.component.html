@@ -1,0 +1,31 @@
+<div class="page">
+  
+
+  <p *ngIf="cargando" class="estado">Cargando recomendaciones…</p>
+
+  <p *ngIf="!cargando && libros.length === 0" class="estado">
+    No hay recomendaciones disponibles ahora.
+  </p>
+
+  <div *ngIf="!cargando && libros.length > 0" class="grid">
+    <a
+      *ngFor="let l of libros"
+      class="card"
+      [routerLink]="['/busqueda-libro', l.id]"
+    >
+      <span class="imgwrap">
+        <img
+          [src]="l.imagen"
+          [alt]="l.titulo"
+          (error)="reemplazarImagen($event)"
+        />
+      </span>
+
+      <div class="info">
+        <div class="titulo">{{ l.titulo }}</div>
+        <div class="tipo">LIBRO</div>
+        <div class="autores">{{ l.autores }}</div>
+      </div>
+    </a>
+  </div>
+</div>

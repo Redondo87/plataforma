@@ -26,7 +26,7 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
   temporada: number = 1;
   capitulo: number = 1;
 
-  // ✅ RESEÑAS
+  // RESEÑAS
   resenas: Resena[] = [];
   nuevaResena: string = '';
 
@@ -82,7 +82,7 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
 
     this.mostrarModal = true;
 
-    // ✅ Al abrir el modal, cargamos reseñas
+    // Al abrir el modal, cargamos reseñas
     this.cargarResenas();
   }
 
@@ -122,45 +122,46 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
     });
   }
 
-  // ✅ RESEÑAS: cargar
+  // RESEÑAS: cargar
   cargarResenas() {
-    // itemId lo guardamos como string (así lo tienes en la tabla resenas)
+    
     this.resenasService.obtenerResenas(this.tipoResena, this.itemId).subscribe({
       next: (data: Resena[]) => this.resenas = data,
       error: (err) => console.error('Error cargando reseñas', err)
     });
   }
 
-  // ✅ RESEÑAS: guardar
-  guardarResena() {
-    const usuarioId = this.authService.getUsuarioId();
+  // RESEÑAS: guardar
+ guardarResena() {
+  const usuarioId = this.authService.getUsuarioId();
 
-    if (!usuarioId) {
-      alert('Debes iniciar sesión para escribir una reseña.');
-      return;
-    }
-
-    const texto = this.nuevaResena.trim();
-    if (!texto) return;
-
-    const resena: Resena = {
-      usuarioId,
-      tipo: this.tipoResena,
-      itemId: this.itemId,
-      contenido: texto
-    };
-
-    this.resenasService.crearResena(resena).subscribe({
-      next: () => {
-        this.nuevaResena = '';
-        this.cargarResenas();
-      },
-      error: (err) => {
-        console.error('Error guardando reseña', err);
-        alert('Error guardando reseña');
-      }
-    });
+  if (!usuarioId) {
+    alert('Debes iniciar sesión para escribir una reseña.');
+    return;
   }
+
+  const texto = this.nuevaResena.trim();
+  if (!texto) return;
+
+  const resena: Resena = {
+    usuarioId,
+    tipo: this.tipoResena,
+    itemId: this.itemId,
+    contenido: texto,
+    imagenUrl: this.posterUrl || 'assets/images/imagenNoDisponible.png'
+  };
+
+  this.resenasService.crearResena(resena).subscribe({
+    next: () => {
+      this.nuevaResena = '';
+      this.cargarResenas();
+    },
+    error: (err) => {
+      console.error('Error guardando reseña', err);
+      alert('Error guardando reseña');
+    }
+  });
+}
 
   reemplazarImagen(event: any) {
     event.target.src = 'assets/images/imagenNoDisponible.png';

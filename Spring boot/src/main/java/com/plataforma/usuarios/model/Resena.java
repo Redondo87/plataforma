@@ -21,7 +21,6 @@ public class Resena {
     @Column(nullable = false)
     private String tipo; // libro | serie | pelicula
 
-    // ✅ coincide con tu BBDD: contenido
     @Column(name = "contenido", columnDefinition = "TEXT", nullable = false)
     private String contenido;
 
@@ -29,6 +28,10 @@ public class Resena {
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    // ✅ NUEVO
+    @Column(name = "imagen_url", columnDefinition = "TEXT")
+    private String imagenUrl;
 
     public Long getId() { return id; }
 
@@ -49,4 +52,7 @@ public class Resena {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 }

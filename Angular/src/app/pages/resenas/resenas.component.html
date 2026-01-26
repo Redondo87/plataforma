@@ -1,0 +1,56 @@
+<div class="resenas-container">
+
+  <h2>✍️ Reseñas</h2>
+
+  <!-- ESTADO -->
+  <p *ngIf="cargando" class="estado">
+    Cargando reseñas…
+  </p>
+
+  <p *ngIf="!cargando && resenas.length === 0" class="estado">
+    No hay reseñas todavía.
+  </p>
+
+  <!-- LISTA -->
+  <div *ngIf="!cargando && resenas.length > 0" class="lista">
+
+    <article *ngFor="let r of resenas" class="resena">
+
+      <!-- IMAGEN -->
+      <img
+        class="resena-img"
+        [src]="r.imagenUrl || '/assets/images/imagenNoDisponible.png'"
+        alt="Portada"
+      />
+
+      <!-- CONTENIDO -->
+      <div class="resena-body">
+
+        <div class="meta">
+          <span class="badge">{{ r.tipo }}</span>
+          <span class="fecha">
+            {{ r.fechaCreacion | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+
+        <p class="contenido">
+          “{{ r.contenido }}”
+        </p>
+
+        <div class="pie">
+          <span>Usuario #{{ r.usuarioId }}</span>
+
+          <a
+            class="ver"
+            [routerLink]="linkDetalle(r)">
+            Ver detalle
+          </a>
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</div>

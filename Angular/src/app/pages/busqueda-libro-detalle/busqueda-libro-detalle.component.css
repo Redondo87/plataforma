@@ -1,6 +1,4 @@
-/* ============================
-   DETALLE LIBRO (PÁGINA)
-============================ */
+/* DETALLE */
 
 .detalle-libro {
   display: flex;
@@ -63,9 +61,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ============================
-   MODAL
-============================ */
+/* MODAL*/
 
 .modal-overlay {
   position: fixed;
@@ -85,11 +81,11 @@ button:disabled {
   padding: 2rem;
   border-radius: 10px;
 
-  width: 520px;        /* un poco más ancho para reseñas */
+  width: 520px;        
   max-width: 92%;
 
-  max-height: 85vh;    /* ✅ evita que se salga de la pantalla */
-  overflow-y: auto;    /* ✅ scroll interno si hay reseñas */
+  max-height: 85vh;    
+  overflow-y: auto;   
 
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
 
@@ -158,9 +154,7 @@ button:disabled {
   background-color: #aaa;
 }
 
-/* ============================
-   RESEÑAS (DENTRO DEL MODAL)
-============================ */
+/*RESEÑAS  */
 
 .reseñas {
   margin-top: 0.5rem;
@@ -214,9 +208,7 @@ button:disabled {
   margin-bottom: 0.8rem;
 }
 
-/* ============================
-   RESPONSIVE
-============================ */
+/* RESPONSIVE */
 
 @media (max-width: 900px) {
   .contenido-libro {
