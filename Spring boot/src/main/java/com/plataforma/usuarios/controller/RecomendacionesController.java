@@ -1,10 +1,9 @@
 package com.plataforma.usuarios.controller;
 
 import com.plataforma.usuarios.service.RecomendacionesService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/recomendaciones")
@@ -17,21 +16,18 @@ public class RecomendacionesController {
         this.recomendacionesService = recomendacionesService;
     }
 
-    // 📚 LIBROS
-    @GetMapping("/libros")
-    public String libros() {
+    @GetMapping(value = "/libros", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> libros() {
         return recomendacionesService.getLibrosRecomendados();
     }
 
-    // 🎬 PELÍCULAS
-    @GetMapping("/peliculas")
-    public String peliculas() {
+    @GetMapping(value = "/peliculas", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> peliculas() {
         return recomendacionesService.getPeliculasRecomendadas();
     }
 
-    // 📺 SERIES
-    @GetMapping("/series")
-    public String series() {
+    @GetMapping(value = "/series", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> series() {
         return recomendacionesService.getSeriesRecomendadas();
     }
 }
