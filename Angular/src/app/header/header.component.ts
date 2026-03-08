@@ -4,6 +4,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs/operators';
+import { environment } from '../../environments/environment'; // ✅
 
 @Component({
   selector: 'app-header',
@@ -27,6 +28,9 @@ export class HeaderComponent {
   mostrarBuscadorSeries = false;
   busquedaHeaderSeries = '';
   resultadosHeaderSeries: any[] = [];
+
+  // ✅ base del backend centralizada
+  private apiBase = environment.apiBase;
 
   constructor(private http: HttpClient, private router: Router) {
     this.router.events
@@ -61,8 +65,7 @@ export class HeaderComponent {
     const consulta = this.busquedaHeaderLibros.trim();
     if (consulta.length < 3) { this.resultadosHeaderLibros = []; return; }
 
-    const apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${consulta}&key=${apiKey}`;
+    const url = `${this.apiBase}/api/external/books/search?q=${encodeURIComponent(consulta)}`;
 
     this.http.get<any>(url).subscribe(res => {
       this.resultadosHeaderLibros = res.items || [];
@@ -73,8 +76,7 @@ export class HeaderComponent {
     const consulta = this.busquedaHeaderSeries.trim();
     if (consulta.length < 3) { this.resultadosHeaderSeries = []; return; }
 
-    const apiKey = '218315c8512d576a1f186b27b8d7538e';
-    const url = `https://api.themoviedb.org/3/search/multi?query=${consulta}&api_key=${apiKey}&language=es`;
+    const url = `${this.apiBase}/api/external/tmdb/search?query=${encodeURIComponent(consulta)}`;
 
     this.http.get<any>(url).subscribe(res => {
       this.resultadosHeaderSeries = res.results || [];
@@ -82,7 +84,9 @@ export class HeaderComponent {
   }
 
   getPosterUrl(path: string | null): string {
-    return path ? `https://image.tmdb.org/t/p/w500${path}` : 'assets/images/imagenNoDisponible.png';
+    return path
+      ? `https://image.tmdb.org/t/p/w500${path}`
+      : 'assets/images/imagenNoDisponible.png';
   }
 
   cerrarBuscadorLibros() {
