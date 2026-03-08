@@ -29,7 +29,8 @@ export class BusquedaLibrosComponent {
     'Viajes', 'Cocina', 'Arte', 'Música', 'Deportes'
   ];
 
-  private apiKey = 'AIzaSyACE882Krrh-9OQQFSddSDjzvbDyQZYZOg';
+  // ✅ solo backend
+  private apiBase = 'http://localhost:8080/api/external';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -46,7 +47,8 @@ export class BusquedaLibrosComponent {
         return;
       }
 
-      const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(consulta)}&key=${this.apiKey}`;
+      const url = `${this.apiBase}/books/search?q=${encodeURIComponent(consulta)}`;
+
       this.http.get<any>(url).subscribe({
         next: response => {
           this.resultados = (response.items || [])
@@ -78,7 +80,10 @@ export class BusquedaLibrosComponent {
     this.busqueda = '';
     this.mensaje = '';
 
-    const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(genero)}&key=${this.apiKey}`;
+    // ✅ usamos el mismo endpoint, cambiando la query
+    const q = `subject:${genero}`;
+    const url = `${this.apiBase}/books/search?q=${encodeURIComponent(q)}`;
+
     this.http.get<any>(url).subscribe({
       next: response => {
         if (!response.items || response.items.length === 0) {
@@ -87,7 +92,6 @@ export class BusquedaLibrosComponent {
           return;
         }
 
-        // Filtrar solo libros con descripción
         const librosFiltrados = response.items.filter((item: any) => {
           return item.volumeInfo?.description && item.volumeInfo.description.length > 0;
         });
@@ -118,19 +122,16 @@ export class BusquedaLibrosComponent {
     });
   }
 
-  // Limpiar caracteres HTML y entidades
   limpiarTexto(texto: string): string {
     if (!texto) return texto;
     return he.decode(texto).replace(/�/g, ' ').trim();
   }
 
-  // Reemplazar imagen si falla
   reemplazarImagen(event: Event) {
     const target = event.target as HTMLImageElement;
     target.src = '/assets/images/imagenNoDisponible.png';
   }
 
-  // Guardar libro solo si está logueado
   guardarLibro(item: any, estado: string, puntuacion: number) {
     const usuarioId = this.authService.getUsuarioId();
     if (!usuarioId) {
