@@ -2,24 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class SeriesService { 
+export class SeriesService {
 
-  private API_URL = 'https://api.themoviedb.org/3';
-  private API_KEY = '218315c8512d576a1f186b27b8d7538e';
-  private apiUrlUsuarios = 'http://localhost:8080/api/series-usuarios';
+  private apiBase = environment.apiBase;
+  private externalTmdb = `${this.apiBase}/api/external/tmdb`;
+  private apiUrlUsuarios = `${this.apiBase}/api/series-usuarios`;
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Obtener detalle de una serie/película
+  /**Obtener detalle de una serie/película */
   obtenerDetalle(tipo: 'tv' | 'movie', id: string): Observable<any> {
-    const detalle$ = this.http.get<any>(`${this.API_URL}/${tipo}/${id}`, {
-      params: { api_key: this.API_KEY, language: 'es' }
+    const detalle$ = this.http.get<any>(`${this.externalTmdb}/detail`, {
+      params: { tipo, id, language: 'es-ES' }
     });
 
-    const proveedores$ = this.http.get<any>(`${this.API_URL}/${tipo}/${id}/watch/providers`, {
-      params: { api_key: this.API_KEY }
+    const proveedores$ = this.http.get<any>(`${this.externalTmdb}/watch-providers`, {
+      params: { tipo, id }
     });
 
     return forkJoin({ detalle: detalle$, proveedores: proveedores$ }).pipe(
@@ -31,17 +32,17 @@ export class SeriesService {
     );
   }
 
-  // 🔹 Obtener top series (TMDB)
+  /**TOP series*/
   obtenerMejoresSeries(): Observable<any[]> {
-    return this.http.get<any>(`${this.API_URL}/tv/top_rated`, {
-      params: { api_key: this.API_KEY, language: 'es' }
+    return this.http.get<any>(`${this.externalTmdb}/top-rated-tv`, {
+      params: { language: 'es-ES' }
     }).pipe(
       map((resp: any) =>
-        resp.results.map((s: any, index: number) => ({
+        (resp?.results ?? []).map((s: any, index: number) => ({
           id: s.id,
           titulo: s.name,
-          imagen: s.poster_path 
-            ? 'https://image.tmdb.org/t/p/w200' + s.poster_path 
+          imagen: s.poster_path
+            ? `https://image.tmdb.org/t/p/w200${s.poster_path}`
             : '/assets/images/imagenNoDisponible.png',
           promedio: s.vote_average,
           ranking: index + 1
@@ -50,12 +51,12 @@ export class SeriesService {
     );
   }
 
-  // 🔹 Obtener series/películas guardadas por el usuario
+  // Series/películas guardadas por el usuario 
   obtenerSeriesUsuario(usuarioId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrlUsuarios}/usuario/${usuarioId}`);
   }
 
-  // 🔹 Guardar serie/película
+  //  Guardar serie/película 
   guardarSerieUsuario(datos: any): Observable<any> {
     return this.http.post(this.apiUrlUsuarios, datos);
   }
