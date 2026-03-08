@@ -6,6 +6,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { UsuarioService, Usuario } from './services/usuario.service';
 import { AuthService } from './services/auth.service';
+import { environment } from '../environments/environment';   // ✅ IMPORTANTE
 
 @Component({
   selector: 'app-root',
@@ -30,9 +31,15 @@ export class AppComponent {
   registroPassword = '';
   registroConfirmacion = '';
 
-  constructor(private usuarioService: UsuarioService, private authService: AuthService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private authService: AuthService
+  ) {}
 
-  // Abrir/cerrar panel de login
+  // ===============================
+  // LOGIN / REGISTER UI
+  // ===============================
+
   toggleLoginForm() {
     this.showLoginForm = !this.showLoginForm;
     this.showRegisterForm = false;
@@ -46,14 +53,16 @@ export class AppComponent {
     this.showRegisterForm = false;
   }
 
-  // Cerrar sesión (recibido desde Header)
   cerrarSesion() {
     this.authService.cerrarSesion();
     this.usuarioLogueado = false;
     this.nombreUsuario = '';
   }
 
-  // Registrar
+  // ===============================
+  // REGISTRO
+  // ===============================
+
   registrarUsuario() {
     const password = this.registroPassword;
 
@@ -89,28 +98,34 @@ export class AppComponent {
     });
   }
 
-  // Login
+  // ===============================
+  // LOGIN
+  // ===============================
+
   loginUsuario() {
     const credenciales = {
       email: this.loginEmail,
       contrasena: this.loginPassword
     };
 
-    this.usuarioService.http.post('http://localhost:8080/api/usuarios/login', credenciales)
-      .subscribe({
-        next: (usuario: any) => {
-          this.authService.setUsuario(usuario.id, usuario.nombre);
+    // ✅ YA NO USAMOS localhost DIRECTO
+    this.usuarioService.http.post(
+      `${environment.apiBase}/api/usuarios/login`,
+      credenciales
+    ).subscribe({
+      next: (usuario: any) => {
+        this.authService.setUsuario(usuario.id, usuario.nombre);
 
-          this.usuarioLogueado = true;
-          this.nombreUsuario = usuario.nombre;
+        this.usuarioLogueado = true;
+        this.nombreUsuario = usuario.nombre;
 
-          this.showLoginForm = false;
-          this.clearForm();
-        },
-        error: () => {
-          alert('Credenciales incorrectas.');
-        }
-      });
+        this.showLoginForm = false;
+        this.clearForm();
+      },
+      error: () => {
+        alert('Credenciales incorrectas.');
+      }
+    });
   }
 
   private clearForm() {
