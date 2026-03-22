@@ -13,7 +13,7 @@ export class SeriesService {
 
   constructor(private http: HttpClient) {}
 
-  /**Obtener detalle de una serie/película */
+  /** Obtener detalle de una serie/película */
   obtenerDetalle(tipo: 'tv' | 'movie', id: string): Observable<any> {
     const detalle$ = this.http.get<any>(`${this.externalTmdb}/detail`, {
       params: { tipo, id, language: 'es-ES' }
@@ -32,7 +32,24 @@ export class SeriesService {
     );
   }
 
-  /**TOP series*/
+  /** Obtener si ya existe registro del usuario para este item */
+  obtenerSerieUsuarioPorItem(usuarioId: number, itemId: number) {
+    return this.http.get<any>(
+      `${this.apiUrlUsuarios}/usuario/${usuarioId}/item/${itemId}`
+    );
+  }
+
+  /** Guardar o actualizar serie/película */
+  guardarSerieUsuario(datos: any): Observable<any> {
+    return this.http.post(this.apiUrlUsuarios, datos);
+  }
+
+  /** Listar todas las series del usuario */
+  obtenerSeriesUsuario(usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrlUsuarios}/usuario/${usuarioId}`);
+  }
+
+  /** Top series */
   obtenerMejoresSeries(): Observable<any[]> {
     return this.http.get<any>(`${this.externalTmdb}/top-rated-tv`, {
       params: { language: 'es-ES' }
@@ -49,15 +66,5 @@ export class SeriesService {
         }))
       )
     );
-  }
-
-  // Series/películas guardadas por el usuario 
-  obtenerSeriesUsuario(usuarioId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrlUsuarios}/usuario/${usuarioId}`);
-  }
-
-  //  Guardar serie/película 
-  guardarSerieUsuario(datos: any): Observable<any> {
-    return this.http.post(this.apiUrlUsuarios, datos);
   }
 }
