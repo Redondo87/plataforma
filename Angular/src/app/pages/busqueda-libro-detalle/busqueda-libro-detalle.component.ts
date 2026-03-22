@@ -26,6 +26,9 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   nuevaResena = '';
   cargandoResenas = false;
 
+  yaExiste = false;
+  registroUsuario: any = null;
+
   private apiUrl = 'http://localhost:8080/api/libros-usuarios';
   private apiBase = 'http://localhost:8080/api/external';
 
@@ -53,6 +56,29 @@ export class BusquedaLibroDetalleComponent implements OnInit {
         descripcion: info.description || 'Sin descripción disponible',
         imagen: info.imageLinks?.thumbnail || '/assets/images/imagenNoDisponible.png'
       };
+
+      this.comprobarSiYaExiste();
+    });
+  }
+
+  comprobarSiYaExiste() {
+
+    if (!this.authService.estaLogueado()) return;
+
+    const usuarioId = this.authService.getUsuarioId();
+    if (!usuarioId || !this.libro?.id) return;
+
+    this.http.get<any>(
+      `${this.apiUrl}/usuario/${usuarioId}/libro/${this.libro.id}`
+    ).subscribe(data => {
+
+      if (data) {
+        this.yaExiste = true;
+        this.registroUsuario = data;
+
+        this.estadoSeleccionado = data.estado;
+        this.puntuacion = data.puntuacion ?? 1;
+      }
     });
   }
 
@@ -80,13 +106,9 @@ export class BusquedaLibroDetalleComponent implements OnInit {
   }
 
   guardarLibro() {
-    const usuarioId = this.authService.getUsuarioId();
 
-    if (!usuarioId) {
-      alert('Debes iniciar sesión.');
-      return;
-    }
-    if (!this.libro?.id) return;
+    const usuarioId = this.authService.getUsuarioId();
+    if (!usuarioId || !this.libro?.id) return;
 
     const datos = {
       usuarioId,
@@ -97,7 +119,8 @@ export class BusquedaLibroDetalleComponent implements OnInit {
 
     this.http.post(this.apiUrl, datos).subscribe({
       next: () => {
-        alert('Libro guardado correctamente');
+        alert(this.yaExiste ? 'Actualizado correctamente' : 'Guardado correctamente');
+        this.comprobarSiYaExiste();
         this.cerrarModal();
       },
       error: err => {
@@ -115,8 +138,7 @@ export class BusquedaLibroDetalleComponent implements OnInit {
         this.resenas = data;
         this.cargandoResenas = false;
       },
-      error: err => {
-        console.error('Error cargando reseñas', err);
+      error: () => {
         this.resenas = [];
         this.cargandoResenas = false;
       }
@@ -125,11 +147,7 @@ export class BusquedaLibroDetalleComponent implements OnInit {
 
   guardarResena() {
     const usuarioId = this.authService.getUsuarioId();
-    if (!usuarioId) {
-      alert('Debes iniciar sesión para escribir una reseña.');
-      return;
-    }
-    if (!this.libro?.id) return;
+    if (!usuarioId || !this.libro?.id) return;
 
     const contenido = this.nuevaResena.trim();
     if (!contenido) return;
@@ -142,15 +160,9 @@ export class BusquedaLibroDetalleComponent implements OnInit {
       imagenUrl: this.libro.imagen || '/assets/images/imagenNoDisponible.png'
     };
 
-    this.resenasService.crearResena(resena).subscribe({
-      next: () => {
-        this.nuevaResena = '';
-        this.cargarResenas(this.libro.id);
-      },
-      error: err => {
-        console.error('Error guardando reseña', err);
-        alert('No se pudo guardar la reseña.');
-      }
+    this.resenasService.crearResena(resena).subscribe(() => {
+      this.nuevaResena = '';
+      this.cargarResenas(this.libro.id);
     });
   }
 }
