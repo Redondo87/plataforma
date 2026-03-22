@@ -185,6 +185,57 @@ button:hover {
   margin: 0.5rem 0;
 }
 
+.user-status-card {
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #4f46e5;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.badge {
+  background-color: #4f46e5;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.estado {
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+/* Colores según estado */
+.estado.viendo { color: #16a34a; }
+.estado.terminado { color: #2563eb; }
+.estado.pendiente { color: #f59e0b; }
+.estado.abandonado { color: #dc2626; }
+
+.status-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.rating {
+  font-weight: 600;
+}
+
+.progress {
+  opacity: 0.85;
+}
+
 @media (max-width: 600px) {
   .contenido-serie {
     flex-direction: column;
