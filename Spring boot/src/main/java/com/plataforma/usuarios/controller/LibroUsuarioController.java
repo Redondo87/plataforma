@@ -27,7 +27,7 @@ public class LibroUsuarioController {
     private RestTemplate restTemplate;
 
     // ------------------------------------------------------------------------
-    // GUARDAR LIBRO DE UN USUARIO
+    // GUARDAR O ACTUALIZAR LIBRO
     // ------------------------------------------------------------------------
     @PostMapping
     public LibroUsuario agregarLibro(@RequestBody LibroUsuarioDTO dto) {
@@ -35,7 +35,11 @@ public class LibroUsuarioController {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        LibroUsuario libroUsuario = new LibroUsuario();
+        // 🔥 Buscar si ya existe
+        LibroUsuario libroUsuario = libroUsuarioRepository
+                .findByUsuario_IdAndLibroId(dto.getUsuarioId(), dto.getLibroId())
+                .orElse(new LibroUsuario());
+
         libroUsuario.setUsuario(usuario);
         libroUsuario.setLibroId(dto.getLibroId());
         libroUsuario.setEstado(dto.getEstado());
@@ -45,23 +49,35 @@ public class LibroUsuarioController {
     }
 
     // ------------------------------------------------------------------------
-    // TOP LIBROS – mezcla 70% Google Books, 30% media de tus usuarios
+    // OBTENER LIBRO CONCRETO DE UN USUARIO
+    // ------------------------------------------------------------------------
+    @GetMapping("/usuario/{usuarioId}/libro/{libroId}")
+    public LibroUsuario obtenerPorUsuarioYLibro(
+            @PathVariable Long usuarioId,
+            @PathVariable String libroId) {
+
+        return libroUsuarioRepository
+                .findByUsuario_IdAndLibroId(usuarioId, libroId)
+                .orElse(null);
+    }
+
+    // ------------------------------------------------------------------------
+    // TOP LIBROS
     // ------------------------------------------------------------------------
     @GetMapping("/top")
     public List<Map<String, Object>> obtenerTopLibros(
             @RequestParam(required = false) Long usuarioId) {
 
-        // Media de puntuaciones de TODOS tus usuarios por libro
         List<Object[]> top = libroUsuarioRepository.findTopRatedByLibroId();
 
-        // Todos los registros del usuario logueado (si llega usuarioId)
         List<LibroUsuario> librosUsuario = usuarioId != null
-                ? libroUsuarioRepository.findByUsuarioId(usuarioId)
+                ? libroUsuarioRepository.findByUsuario_Id(usuarioId)
                 : List.of();
 
         List<Map<String, Object>> resultado = new ArrayList<>();
 
         for (Object[] fila : top) {
+
             String libroId = (String) fila[0];
             Double promedioInterno = (Double) fila[1];
 
@@ -71,17 +87,16 @@ public class LibroUsuarioController {
             else if (valor instanceof BigInteger b) votos = b.longValue();
             else votos = 0L;
 
-            // 🔹 Puntuación EXTERNA desde Google Books
             Map<String, Object> infoLibro = obtenerInfoLibroDesdeGoogleBooks(libroId);
-            Double ratingExterno5 = (Double) infoLibro.get("ratingExterno");        // 0–5
+
+            Double ratingExterno5 = (Double) infoLibro.get("ratingExterno");
             Integer ratingsExternos = (Integer) infoLibro.get("ratingsCountExterno");
 
             Double ratingExterno10 = null;
             if (ratingExterno5 != null) {
-                ratingExterno10 = ratingExterno5 * 2.0;                            // 0–10
+                ratingExterno10 = ratingExterno5 * 2.0;
             }
 
-            // 🔹 Puntuación final MIXTA (opción C)
             Double puntuacionFinal;
             if (ratingExterno10 != null && promedioInterno != null) {
                 puntuacionFinal = ratingExterno10 * 0.7 + promedioInterno * 0.3;
@@ -93,7 +108,6 @@ public class LibroUsuarioController {
                 puntuacionFinal = 0.0;
             }
 
-            // 🔹 Puntuación del usuario actual (columna “Tu puntuación”)
             Integer miPuntuacion = librosUsuario.stream()
                     .filter(reg -> reg.getLibroId().equals(libroId))
                     .map(LibroUsuario::getPuntuacion)
@@ -104,30 +118,19 @@ public class LibroUsuarioController {
             mapa.put("libroId", libroId);
             mapa.put("titulo", infoLibro.get("titulo"));
             mapa.put("imagen", infoLibro.get("imagen"));
-
-            // SE USA EN EL FRONT: columna “Puntuación promedio”
             mapa.put("promedio", puntuacionFinal);
-
-            // Info extra por si la quieres usar luego
-            mapa.put("promedioInterno", promedioInterno);
-            mapa.put("ratingExterno", ratingExterno10);
-            mapa.put("votosUsuarios", votos);
-            mapa.put("votosExternos", ratingsExternos);
-
-            // Columna "Tu puntuación"
             mapa.put("miPuntuacion", miPuntuacion != null ? miPuntuacion : 0);
+            mapa.put("ranking", 0);
 
             resultado.add(mapa);
         }
 
-        // Ordenar de mayor a menor según la puntuación MIXTA
         resultado.sort((a, b) -> {
             Double pa = ((Number) a.getOrDefault("promedio", 0)).doubleValue();
             Double pb = ((Number) b.getOrDefault("promedio", 0)).doubleValue();
             return Double.compare(pb, pa);
         });
 
-        // Asignar ranking 1,2,3,...
         int ranking = 1;
         for (Map<String, Object> libro : resultado) {
             libro.put("ranking", ranking++);
@@ -137,7 +140,7 @@ public class LibroUsuarioController {
     }
 
     // ------------------------------------------------------------------------
-    // Google Books: título, imagen, PUNTUACIÓN EXTERNA
+    // GOOGLE BOOKS
     // ------------------------------------------------------------------------
     private Map<String, Object> obtenerInfoLibroDesdeGoogleBooks(String libroId) {
 
@@ -146,8 +149,6 @@ public class LibroUsuarioController {
         info.put("imagen", "/assets/images/imagenNoDisponible.png");
         info.put("ratingExterno", null);
         info.put("ratingsCountExterno", null);
-
-        if (libroId == null || libroId.isBlank()) return info;
 
         try {
             String url = "https://www.googleapis.com/books/v1/volumes/" + libroId +
@@ -159,33 +160,29 @@ public class LibroUsuarioController {
                 Map<String, Object> volumeInfo =
                         (Map<String, Object>) response.get("volumeInfo");
 
-                Object titleObj = volumeInfo.get("title");
-                if (titleObj != null) {
-                    info.put("titulo", titleObj.toString());
+                if (volumeInfo.get("title") != null) {
+                    info.put("titulo", volumeInfo.get("title").toString());
                 }
 
                 if (volumeInfo.containsKey("imageLinks")) {
                     Map<String, Object> imageLinks =
                             (Map<String, Object>) volumeInfo.get("imageLinks");
-                    Object thumb = imageLinks.get("thumbnail");
-                    if (thumb != null) {
-                        info.put("imagen", thumb.toString());
+                    if (imageLinks.get("thumbnail") != null) {
+                        info.put("imagen", imageLinks.get("thumbnail").toString());
                     }
                 }
 
-                Object avgObj = volumeInfo.get("averageRating");
-                if (avgObj instanceof Number num) {
-                    info.put("ratingExterno", num.doubleValue()); // 0–5
+                if (volumeInfo.get("averageRating") instanceof Number num) {
+                    info.put("ratingExterno", num.doubleValue());
                 }
 
-                Object cntObj = volumeInfo.get("ratingsCount");
-                if (cntObj instanceof Number num2) {
+                if (volumeInfo.get("ratingsCount") instanceof Number num2) {
                     info.put("ratingsCountExterno", num2.intValue());
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("❌ Error consultando Google Books: " + e.getMessage());
+            System.out.println("Error Google Books: " + e.getMessage());
         }
 
         return info;
