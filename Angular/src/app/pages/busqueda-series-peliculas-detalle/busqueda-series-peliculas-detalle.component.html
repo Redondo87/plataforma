@@ -1,4 +1,5 @@
 <div *ngIf="item" class="detalle-serie">
+
   <h2>{{ item.title || item.name }}</h2>
 
   <div class="contenido-serie">
@@ -16,14 +17,37 @@
     </div>
   </div>
 
+  <!-- TARJETA USUARIO -->
+  <div *ngIf="yaExiste" class="user-status-card">
+    <div class="status-header">
+      <span class="badge">En tu lista</span>
+      <span class="estado">
+        {{ registroUsuario?.estado }}
+      </span>
+    </div>
+
+    <div class="status-body">
+      <div class="rating">
+        ⭐ {{ registroUsuario?.puntuacion }}/10
+      </div>
+
+      <div *ngIf="esSerie" class="progress">
+        📺 T{{ registroUsuario?.temporada }} · C{{ registroUsuario?.capitulo }}
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN -->
   <div class="boton-centro">
-    <button (click)="abrirModal()">
-      Añadir a mi lista
+    <button type="button" (click)="abrirModal()">
+      {{ yaExiste ? 'Editar en mi lista' : 'Añadir a mi lista' }}
     </button>
   </div>
+
 </div>
 
-<!-- MODAL -->
+<!-- ================= MODAL ================= -->
+
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal">
 
@@ -60,7 +84,7 @@
       </div>
     </div>
 
-    <!-- RESEÑAS (dentro del modal) -->
+    <!-- RESEÑAS -->
     <section class="reseñas">
       <h4>📝 Reseñas de usuarios</h4>
 
@@ -84,15 +108,21 @@
           placeholder="Escribe tu reseña..."
         ></textarea>
 
-        <button (click)="guardarResena()" [disabled]="!nuevaResena.trim()">
+        <button type="button"
+                (click)="guardarResena()"
+                [disabled]="!nuevaResena.trim()">
           Publicar reseña
         </button>
       </div>
     </section>
 
     <div class="modal-buttons">
-      <button (click)="guardarItem()">Guardar</button>
-      <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+      <button type="button" (click)="guardarItem()">
+        {{ yaExiste ? 'Actualizar' : 'Guardar' }}
+      </button>
+      <button type="button" class="cancelar" (click)="cerrarModal()">
+        Cancelar
+      </button>
     </div>
 
   </div>
