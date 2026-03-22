@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/series-usuarios")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SerieUsuarioController {
 
     @Autowired
@@ -22,14 +22,18 @@ public class SerieUsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // 🔹 Guardar serie/película en la lista de un usuario
+    // 🔹 Guardar o actualizar
     @PostMapping
     public SerieUsuario guardarSerie(@RequestBody SerieUsuarioDTO dto) {
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        SerieUsuario su = new SerieUsuario();
+        // Buscar si ya existe
+        SerieUsuario su = serieUsuarioRepository
+                .findByUsuario_IdAndItemId(dto.getUsuarioId(), dto.getItemId())
+                .orElse(new SerieUsuario());
+
         su.setUsuario(usuario);
         su.setItemId(dto.getItemId());
         su.setTitulo(dto.getTitulo());
@@ -42,19 +46,20 @@ public class SerieUsuarioController {
         return serieUsuarioRepository.save(su);
     }
 
-    // 🔹 Listar todas las series/películas de un usuario
+    // 🔹 Listar por usuario
     @GetMapping("/usuario/{usuarioId}")
     public List<SerieUsuario> listarPorUsuario(@PathVariable Long usuarioId) {
-        return serieUsuarioRepository.findAll()
-                .stream()
-                .filter(su -> su.getUsuario().getId().equals(usuarioId))
-                .toList();
+        return serieUsuarioRepository.findByUsuario_Id(usuarioId);
     }
 
-    // Opcional: obtener un solo registro por ID
-    @GetMapping("/{id}")
-    public SerieUsuario obtenerPorId(@PathVariable Long id) {
-        return serieUsuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+    // 🔹 NUEVO: obtener por usuario + item
+    @GetMapping("/usuario/{usuarioId}/item/{itemId}")
+    public SerieUsuario obtenerPorUsuarioYItem(
+            @PathVariable Long usuarioId,
+            @PathVariable Long itemId) {
+
+        return serieUsuarioRepository
+                .findByUsuario_IdAndItemId(usuarioId, itemId)
+                .orElse(null);
     }
 }
