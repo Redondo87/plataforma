@@ -1,34 +1,50 @@
 <!-- LIBRO -->
-<div *ngIf="libro as l" class="detalle-libro">
-  <h2>{{ l.titulo }}</h2>
+<div *ngIf="libro" class="detalle-libro">
+
+  <h2>{{ libro.titulo }}</h2>
 
   <div class="contenido-libro">
     <div class="imagen">
       <img
-        [src]="l.imagen || '/assets/images/imagenNoDisponible.png'"
+        [src]="libro.imagen || '/assets/images/imagenNoDisponible.png'"
         alt="Portada"
         (error)="reemplazarImagen($event)"
       />
     </div>
 
     <div class="descripcion">
-      <p><strong>Autor:</strong> {{ l.autor }}</p>
+      <p><strong>Autor:</strong> {{ libro.autor }}</p>
       <strong>Descripción:</strong>
-      <p [innerHTML]="l.descripcion"></p>
+      <p [innerHTML]="libro.descripcion"></p>
+    </div>
+  </div>
+
+  <!-- ESTADO DEL USUARIO (justo encima del botón) -->
+  <div *ngIf="yaExiste" class="user-status-card">
+    <div class="status-header">
+      <span class="badge">En tu lista</span>
+      <span class="estado">{{ registroUsuario?.estado }}</span>
+    </div>
+    <div class="status-body">
+      ⭐ {{ registroUsuario?.puntuacion }}/10
     </div>
   </div>
 
   <div class="boton-centro">
-    <button (click)="abrirModal()">Añadir a mi lista</button>
+    <button type="button" (click)="abrirModal()">
+      {{ yaExiste ? 'Editar en mi lista' : 'Añadir a mi lista' }}
+    </button>
   </div>
+
 </div>
 
 <!-- MODAL -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal">
+
     <h3>{{ libro?.titulo }}</h3>
 
-    <!-- FORMULARIO AÑADIR -->
+    <!-- FORMULARIO -->
     <div class="campos-horizontal">
       <div class="campo-horizontal">
         <label>Estado:</label>
@@ -51,7 +67,9 @@
     <section class="reseñas">
       <h4>📝 Reseñas de usuarios</h4>
 
-      <p *ngIf="cargandoResenas" class="estado">Cargando reseñas...</p>
+      <p *ngIf="cargandoResenas" class="estado">
+        Cargando reseñas...
+      </p>
 
       <div *ngIf="!cargandoResenas && resenas.length > 0; else sinResenas">
         <div class="resena" *ngFor="let r of resenas">
@@ -70,7 +88,7 @@
         </p>
       </ng-template>
 
-      <!-- ESCRIBIR RESEÑA -->
+      <!-- NUEVA RESEÑA -->
       <div class="nueva-resena" *ngIf="authService.estaLogueado(); else loginAviso">
         <h5>Escribe tu reseña</h5>
 
@@ -80,19 +98,30 @@
           placeholder="Comparte tu opinión sobre este libro..."
         ></textarea>
 
-        <button (click)="guardarResena()" [disabled]="!nuevaResena.trim()">
+        <button
+          type="button"
+          (click)="guardarResena()"
+          [disabled]="!nuevaResena.trim()">
           Publicar reseña
         </button>
       </div>
 
       <ng-template #loginAviso>
-        <p class="estado">Inicia sesión para escribir una reseña.</p>
+        <p class="estado">
+          Inicia sesión para escribir una reseña.
+        </p>
       </ng-template>
+
     </section>
 
     <div class="modal-buttons">
-      <button class="guardar" (click)="guardarLibro()">Guardar</button>
-      <button class="cancelar" (click)="cerrarModal()">Cancelar</button>
+      <button type="button" class="guardar" (click)="guardarLibro()">
+        {{ yaExiste ? 'Actualizar' : 'Guardar' }}
+      </button>
+
+      <button type="button" class="cancelar" (click)="cerrarModal()">
+        Cancelar
+      </button>
     </div>
 
   </div>
