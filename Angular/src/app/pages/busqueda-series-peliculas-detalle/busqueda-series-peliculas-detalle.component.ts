@@ -29,6 +29,9 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
   resenas: Resena[] = [];
   nuevaResena: string = '';
 
+  yaExiste = false;
+  registroUsuario: any = null;
+
   private itemId: string = '';
   private tipoResena: 'serie' | 'pelicula' = 'serie';
 
@@ -53,7 +56,6 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
   }
 
   obtenerDetalles(id: string, tipo: string) {
-
     const tipoTmdb: 'tv' | 'movie' = tipo === 'serie' ? 'tv' : 'movie';
 
     this.seriesService.obtenerDetalle(tipoTmdb, id).subscribe({
@@ -62,9 +64,32 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
         this.posterUrl = data?.poster_path
           ? 'https://image.tmdb.org/t/p/w500' + data.poster_path
           : 'assets/images/imagenNoDisponible.png';
+
+        this.comprobarSiYaExiste();
       },
       error: (err) => console.error('Error cargando detalles', err)
     });
+  }
+
+  comprobarSiYaExiste() {
+    if (!this.authService.estaLogueado()) return;
+
+    const usuarioId = this.authService.getUsuarioId();
+    if (!usuarioId || !this.item?.id) return;
+
+    this.seriesService
+      .obtenerSerieUsuarioPorItem(usuarioId, this.item.id)
+      .subscribe(data => {
+        if (data) {
+          this.yaExiste = true;
+          this.registroUsuario = data;
+
+          this.estadoSeleccionado = data.estado;
+          this.puntuacion = data.puntuacion ?? 1;
+          this.temporada = data.temporada ?? 1;
+          this.capitulo = data.capitulo ?? 1;
+        }
+      });
   }
 
   reemplazarImagen(event: any) {
@@ -87,12 +112,7 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
 
   guardarItem() {
     const usuarioId = this.authService.getUsuarioId();
-
-    if (!usuarioId) {
-      alert('Debes iniciar sesión.');
-      this.mostrarModal = false;
-      return;
-    }
+    if (!usuarioId) return;
 
     const body = {
       usuarioId: usuarioId,
@@ -107,7 +127,8 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
 
     this.seriesService.guardarSerieUsuario(body).subscribe({
       next: () => {
-        alert('Guardado correctamente');
+        alert(this.yaExiste ? 'Actualizado correctamente' : 'Guardado correctamente');
+        this.comprobarSiYaExiste();
         this.cerrarModal();
       },
       error: err => {
@@ -126,11 +147,7 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
 
   guardarResena() {
     const usuarioId = this.authService.getUsuarioId();
-
-    if (!usuarioId) {
-      alert('Debes iniciar sesión para escribir una reseña.');
-      return;
-    }
+    if (!usuarioId) return;
 
     const texto = this.nuevaResena.trim();
     if (!texto) return;
@@ -140,17 +157,13 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
       tipo: this.tipoResena,
       itemId: this.itemId,
       contenido: texto,
-      imagenUrl: this.posterUrl || 'assets/images/imagenNoDisponible.png'
+      imagenUrl: this.posterUrl
     };
 
     this.resenasService.crearResena(resena).subscribe({
       next: () => {
         this.nuevaResena = '';
         this.cargarResenas();
-      },
-      error: (err) => {
-        console.error('Error guardando reseña', err);
-        alert('Error guardando reseña');
       }
     });
   }
