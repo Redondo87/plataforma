@@ -46,21 +46,28 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     const tipo = this.route.snapshot.paramMap.get('tipo');
 
-    this.esSerie = tipo === 'serie';
+    if (!id || !tipo) return;
 
-    if (id && tipo) {
-      this.itemId = id;
-      this.tipoResena = tipo === 'pelicula' ? 'pelicula' : 'serie';
-      this.obtenerDetalles(id, tipo);
-    }
+    this.itemId = id;
+
+    // 🔥 ACEPTA tv / movie / serie / pelicula
+    this.esSerie = tipo === 'serie' || tipo === 'tv';
+
+    this.tipoResena = this.esSerie ? 'serie' : 'pelicula';
+
+    this.obtenerDetalles(id, tipo);
   }
 
   obtenerDetalles(id: string, tipo: string) {
-    const tipoTmdb: 'tv' | 'movie' = tipo === 'serie' ? 'tv' : 'movie';
+
+    // 🔥 Conversión correcta a formato TMDB
+    const tipoTmdb: 'tv' | 'movie' =
+      tipo === 'serie' || tipo === 'tv' ? 'tv' : 'movie';
 
     this.seriesService.obtenerDetalle(tipoTmdb, id).subscribe({
       next: (data: any) => {
         this.item = data;
+
         this.posterUrl = data?.poster_path
           ? 'https://image.tmdb.org/t/p/w500' + data.poster_path
           : 'assets/images/imagenNoDisponible.png';
@@ -112,7 +119,7 @@ export class BusquedaSeriesPeliculasDetalleComponent implements OnInit {
 
   guardarItem() {
     const usuarioId = this.authService.getUsuarioId();
-    if (!usuarioId) return;
+    if (!usuarioId || !this.item) return;
 
     const body = {
       usuarioId: usuarioId,
