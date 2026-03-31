@@ -20,9 +20,7 @@ public class RecomendacionesService {
     // ---------------- LIBROS ----------------
     public ResponseEntity<String> getLibrosRecomendados() {
         if (googleBooksKey == null || googleBooksKey.isBlank()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"GOOGLE_BOOKS_API_KEY missing\"}");
+            return error("GOOGLE_BOOKS_API_KEY missing");
         }
 
         String url =
@@ -32,28 +30,13 @@ public class RecomendacionesService {
                         "&maxResults=24" +
                         "&key=" + googleBooksKey;
 
-        try {
-            ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
-            return ResponseEntity.status(resp.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(resp.getBody());
-        } catch (HttpStatusCodeException e) {
-            return ResponseEntity.status(e.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(e.getResponseBodyAsString());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"Backend error\",\"detail\":\"" + e.getMessage().replace("\"","'") + "\"}");
-        }
+        return forward(url);
     }
 
-    // ---------------- PELÍCULAS ----------------
+    // ---------------- PELÍCULAS TRENDING ----------------
     public ResponseEntity<String> getPeliculasRecomendadas() {
         if (tmdbKey == null || tmdbKey.isBlank()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"TMDB_API_KEY missing\"}");
+            return error("TMDB_API_KEY missing");
         }
 
         String url =
@@ -61,28 +44,13 @@ public class RecomendacionesService {
                         "?api_key=" + tmdbKey +
                         "&language=es-ES";
 
-        try {
-            ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
-            return ResponseEntity.status(resp.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(resp.getBody());
-        } catch (HttpStatusCodeException e) {
-            return ResponseEntity.status(e.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(e.getResponseBodyAsString());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"Backend error\",\"detail\":\"" + e.getMessage().replace("\"","'") + "\"}");
-        }
+        return forward(url);
     }
 
-    // ---------------- SERIES ----------------
+    // ---------------- SERIES TRENDING ----------------
     public ResponseEntity<String> getSeriesRecomendadas() {
         if (tmdbKey == null || tmdbKey.isBlank()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"TMDB_API_KEY missing\"}");
+            return error("TMDB_API_KEY missing");
         }
 
         String url =
@@ -90,6 +58,93 @@ public class RecomendacionesService {
                         "?api_key=" + tmdbKey +
                         "&language=es-ES";
 
+        return forward(url);
+    }
+
+    // ================= NUEVO: SEARCH MULTI =================
+    public ResponseEntity<String> searchMulti(String query) {
+        if (tmdbKey == null || tmdbKey.isBlank()) {
+            return error("TMDB_API_KEY missing");
+        }
+
+        String url =
+                "https://api.themoviedb.org/3/search/multi" +
+                        "?api_key=" + tmdbKey +
+                        "&language=es-ES" +
+                        "&query=" + query +
+                        "&page=1" +
+                        "&include_adult=false";
+
+        return forward(url);
+    }
+
+    // ================= NUEVO: DISCOVER MOVIES =================
+    public ResponseEntity<String> discoverMoviesByGenre(Integer genreId) {
+        if (tmdbKey == null || tmdbKey.isBlank()) {
+            return error("TMDB_API_KEY missing");
+        }
+
+        String url =
+                "https://api.themoviedb.org/3/discover/movie" +
+                        "?api_key=" + tmdbKey +
+                        "&with_genres=" + genreId +
+                        "&language=es-ES";
+
+        return forward(url);
+    }
+
+    // ================= NUEVO: DISCOVER TV =================
+    public ResponseEntity<String> discoverTvByGenre(Integer genreId) {
+        if (tmdbKey == null || tmdbKey.isBlank()) {
+            return error("TMDB_API_KEY missing");
+        }
+
+        String url =
+                "https://api.themoviedb.org/3/discover/tv" +
+                        "?api_key=" + tmdbKey +
+                        "&with_genres=" + genreId +
+                        "&language=es-ES";
+
+        return forward(url);
+    }
+
+    // ================= NUEVO: GENRES MOVIES =================
+    public ResponseEntity<String> getMovieGenres() {
+        if (tmdbKey == null || tmdbKey.isBlank()) {
+            return error("TMDB_API_KEY missing");
+        }
+
+        String url =
+                "https://api.themoviedb.org/3/genre/movie/list" +
+                        "?api_key=" + tmdbKey +
+                        "&language=es-ES";
+
+        return forward(url);
+    }
+
+    // ================= NUEVO: GENRES TV =================
+    public ResponseEntity<String> getTvGenres() {
+        if (tmdbKey == null || tmdbKey.isBlank()) {
+            return error("TMDB_API_KEY missing");
+        }
+
+        String url =
+                "https://api.themoviedb.org/3/genre/tv/list" +
+                        "?api_key=" + tmdbKey +
+                        "&language=es-ES";
+
+        return forward(url);
+    }
+
+    // ================= HELPERS =================
+
+    private ResponseEntity<String> error(String message) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"error\":\"" + message + "\"}");
+    }
+
+    private ResponseEntity<String> forward(String url) {
         try {
             ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
             return ResponseEntity.status(resp.getStatusCode())
@@ -102,7 +157,7 @@ public class RecomendacionesService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error\":\"Backend error\",\"detail\":\"" + e.getMessage().replace("\"","'") + "\"}");
+                    .body("{\"error\":\"Backend error\"}");
         }
     }
 }
