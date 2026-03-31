@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-busqueda-series-peliculas',
@@ -16,7 +16,7 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
 
   terminoBusqueda = '';
   generoSeleccionado = '';
-  generosTMDB: string[] = [];      
+  generosTMDB: string[] = [];
   resultadosFiltrados: any[] = [];
   itemSeleccionado: any = null;
   mostrarGeneros = true;
@@ -31,8 +31,7 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
   capitulo: number | null = null;
 
   private generosIds: { [key: string]: number } = {};
-  private apiKey = '218315c8512d576a1f186b27b8d7538e';
-  private baseUrl = 'https://api.themoviedb.org/3';
+  private baseUrl = 'http://localhost:8080/api/recomendaciones';
 
   guardarUrl = 'http://localhost:8080/api/lista/guardar';
 
@@ -45,6 +44,8 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
   ngOnInit(): void {
     this.cargarGenerosTMDB();
   }
+
+  // ================= BUSCADOR =================
 
   onInput(): void {
     if (this.terminoBusqueda.trim().length < 3) {
@@ -60,23 +61,25 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
   }
 
   private buscarSugerencias(query: string): void {
-    const url = `${this.baseUrl}/search/multi?api_key=${this.apiKey}&language=es-ES&query=${encodeURIComponent(query)}&page=1&include_adult=false`;
+    this.http
+      .get<any>(`${this.baseUrl}/search?query=${encodeURIComponent(query)}`)
+      .subscribe({
+        next: data => {
+          this.sugerencias = (data.results || []).slice(0, 10).map((item: any) => ({
+            id: item.id,
+            media_type: item.media_type,
+            titulo: item.title || item.name || 'Sin título',
+            descripcion: item.overview || '',
+            portada: item.poster_path
+              ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+              : 'assets/no-image.jpg',
+            creadores: item.media_type === 'tv' ? 'Serie' : 'Película'
+          }));
 
-    this.http.get<any>(url).subscribe({
-      next: data => {
-        this.sugerencias = (data.results || []).slice(0, 10).map((item: any) => ({
-          id: item.id,
-          media_type: item.media_type,
-          titulo: item.title || item.name || 'Sin título',
-          descripcion: item.overview || '',
-          portada: item.poster_path ? `https://image.tmdb.org/t/p/w300${item.poster_path}` : 'assets/no-image.jpg',
-          creadores: item.media_type === 'tv' ? 'Serie' : 'Película'
-        }));
-
-        this.mostrarSugerencias = this.sugerencias.length > 0;
-      },
-      error: err => console.error('Error TMDB sugerencias:', err)
-    });
+          this.mostrarSugerencias = this.sugerencias.length > 0;
+        },
+        error: err => console.error('Error sugerencias:', err)
+      });
   }
 
   irADetalle(item: any): void {
@@ -86,58 +89,80 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
 
     this.router.navigate([
       '/series/detalle',
-      item.media_type === 'tv' ? 'serie' : 'pelicula',
+      item.media_type,
       item.id
     ]);
   }
+
+  // ================= FILTRAR POR GÉNERO =================
 
   filtrarPorGenero(genero: string): void {
     this.generoSeleccionado = genero;
     this.mostrarGeneros = false;
 
     const generoId = this.generosIds[genero];
+    if (!generoId) return;
 
-    if (!generoId) {
-      console.warn('Género no existe en TMDB:', genero);
-      this.resultadosFiltrados = [];
-      return;
-    }
+    this.http
+      .get<any>(`${this.baseUrl}/discover/movies?genreId=${generoId}`)
+      .subscribe(dataMovies => {
 
-    const urlMovies = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${generoId}&language=es-ES`;
-    const urlTV = `${this.baseUrl}/discover/tv?api_key=${this.apiKey}&with_genres=${generoId}&language=es-ES`;
-
-    // Películas
-    this.http.get<any>(urlMovies).subscribe({
-      next: dataMovies => {
         const peliculas = (dataMovies.results || []).map((item: any) => ({
           id: item.id,
           media_type: 'movie',
-          titulo: item.title || 'Sin título',
-          descripcion: item.overview || '',
-          portada: item.poster_path ? `https://image.tmdb.org/t/p/w300${item.poster_path}` : 'assets/no-image.jpg',
+          titulo: item.title,
+          descripcion: item.overview,
+          portada: item.poster_path
+            ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+            : 'assets/no-image.jpg',
           creadores: 'Película'
         }));
 
-        // Series
-        this.http.get<any>(urlTV).subscribe({
-          next: dataTV => {
+        this.http
+          .get<any>(`${this.baseUrl}/discover/tv?genreId=${generoId}`)
+          .subscribe(dataTV => {
+
             const series = (dataTV.results || []).map((item: any) => ({
               id: item.id,
               media_type: 'tv',
-              titulo: item.name || 'Sin título',
-              descripcion: item.overview || '',
-              portada: item.poster_path ? `https://image.tmdb.org/t/p/w300${item.poster_path}` : 'assets/no-image.jpg',
+              titulo: item.name,
+              descripcion: item.overview,
+              portada: item.poster_path
+                ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+                : 'assets/no-image.jpg',
               creadores: 'Serie'
             }));
 
             this.resultadosFiltrados = [...peliculas, ...series];
-          },
-          error: err => console.error('Error al cargar series por género', err)
-        });
-      },
-      error: err => console.error('Error al cargar películas por género', err)
-    });
+          });
+      });
   }
+
+  // ================= CARGAR GÉNEROS =================
+
+  private cargarGenerosTMDB(): void {
+    this.http.get<any>(`${this.baseUrl}/genres/movies`)
+      .subscribe(data => {
+        (data.genres || []).forEach((g: any) => {
+          this.generosIds[g.name] = g.id;
+          if (!this.generosTMDB.includes(g.name)) {
+            this.generosTMDB.push(g.name);
+          }
+        });
+      });
+
+    this.http.get<any>(`${this.baseUrl}/genres/tv`)
+      .subscribe(data => {
+        (data.genres || []).forEach((g: any) => {
+          this.generosIds[g.name] = g.id;
+          if (!this.generosTMDB.includes(g.name)) {
+            this.generosTMDB.push(g.name);
+          }
+        });
+      });
+  }
+
+  // ================= MODAL =================
 
   abrirModal(item: any): void {
     this.itemSeleccionado = item;
@@ -163,7 +188,6 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
       estado: this.estadoSeleccionado,
       puntuacion: this.puntuacion,
       titulo: this.itemSeleccionado.titulo
-
     };
 
     if (this.itemSeleccionado.media_type === 'tv') {
@@ -177,29 +201,6 @@ export class BusquedaSeriesPeliculasComponent implements OnInit {
         this.cerrarModal();
       },
       error: err => console.error('Error guardando:', err)
-    });
-  }
-
-  private cargarGenerosTMDB(): void {
-    const urlMovies = `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=es-ES`;
-    const urlTV = `${this.baseUrl}/genre/tv/list?api_key=${this.apiKey}&language=es-ES`;
-
-    this.http.get<any>(urlMovies).subscribe(data => {
-      (data.genres || []).forEach((g: any) => {
-        this.generosIds[g.name] = g.id;
-        if (!this.generosTMDB.includes(g.name)) {
-          this.generosTMDB.push(g.name);
-        }
-      });
-    });
-
-    this.http.get<any>(urlTV).subscribe(data => {
-      (data.genres || []).forEach((g: any) => {
-        this.generosIds[g.name] = g.id;
-        if (!this.generosTMDB.includes(g.name)) {
-          this.generosTMDB.push(g.name);
-        }
-      });
     });
   }
 
