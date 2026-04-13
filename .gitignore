@@ -1,0 +1,13 @@
+# Angular
+node_modules/
+dist/
+.env
+Angular/src/environments/environment.prod.ts
+
+# Spring Boot
+Spring boot/target/
+Spring boot/src/main/resources/application.properties
+Spring boot/src/main/resources/application.yml
+
+# IDE
+.vscode/
