@@ -2,7 +2,7 @@
 
 Ocioteca es una aplicación full-stack que permite a los usuarios gestionar su consumo de contenido multimedia (libros, series y películas) en un único lugar.
 
-Incluye autenticación de usuarios, seguimiento detallado del progreso (capítulos, temporadas y estado), sistema de valoraciones y consumo de APIs externas en tiempo real.
+Incluye autenticación de usuarios, seguimiento detallado del progreso (capítulos, temporadas y estado), sistema de valoraciones, reseñas y consumo de APIs externas en tiempo real.
 
 El proyecto simula un entorno real de desarrollo con arquitectura desacoplada frontend-backend y gestión segura de credenciales.
 
@@ -54,8 +54,8 @@ Ocioteca unifica todo en una sola aplicación.
   * En espera
   * Abandonado
 * 📺 Guardado de temporada y capítulo actual en series
-* 🎥 Visualización de plataformas de streaming disponibles
-* 📚 Enlace directo a Google Books
+* 📚 Enlace directo a Google Books para compra de libros
+* 🎥 Visualización de plataformas de streaming disponibles (Netflix, etc.)
 * 🔐 Sistema de autenticación (necesario para guardar progreso)
 
 ---
@@ -147,10 +147,8 @@ Para ejecutar el proyecto en local:
 
 ## 📂 Estructura general
 
-```
-/Angular        → Aplicación frontend en Angular  
-/Spring boot    → Backend desarrollado con Spring Boot  
-```
+/Angular        → Aplicación frontend en Angular
+/Spring boot    → Backend desarrollado con Spring Boot
 
 ---
 
@@ -165,4 +163,5 @@ El proyecto está en continua mejora con futuras optimizaciones de rendimiento, 
 ## 👨‍💻 Autor
 
 Proyecto desarrollado íntegramente por mí como aplicación full-stack para portfolio profesional.
+
 
