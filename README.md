@@ -4,6 +4,8 @@ Ocioteca es una aplicación full-stack que permite a los usuarios gestionar su c
 
 Incluye autenticación de usuarios, seguimiento detallado del progreso (capítulos, temporadas y estado), sistema de valoraciones, reseñas y consumo de APIs externas en tiempo real.
 
+Proyecto desarrollado aplicando buenas prácticas de arquitectura por capas, protección de credenciales y consumo seguro de APIs externas.
+
 El proyecto simula un entorno real de desarrollo con arquitectura desacoplada frontend-backend y gestión segura de credenciales.
 
 ---
@@ -68,6 +70,9 @@ Ocioteca unifica todo en una sola aplicación.
 * Arquitectura por capas en backend
 * Persistencia de datos con MySQL
 * Manejo seguro de API Keys
+* Integración de base de datos relacional con consultas agregadas
+* Manejo de estados personalizados por usuario
+* Control de flujo entre frontend y backend mediante DTOs
 
 ---
 
@@ -105,18 +110,27 @@ Ocioteca unifica todo en una sola aplicación.
 * El backend actúa como intermediario
 * Uso de archivo de configuración ignorado por Git
 * Ejemplo de configuración incluido (`application-example.properties`)
+* Eliminación de archivos sensibles del repositorio mediante `.gitignore`
+* Separación de configuración real y archivo de ejemplo
+* Variables de entorno utilizadas en entorno de producción
 
 ---
 
 ## 🏗 Arquitectura
 
+```
 Frontend (Angular)
-⬇
+        ↓
 Backend (Spring Boot - API REST)
-⬇
+        ↓
+Base de Datos (MySQL)
+        ↓
 APIs externas (TMDB y Google Books)
+```
 
-Las claves de las APIs nunca son visibles en el navegador.
+El backend actúa como intermediario seguro entre el frontend y los servicios externos.
+
+Las API Keys nunca son visibles en el navegador.
 
 ---
 
@@ -163,5 +177,13 @@ El proyecto está en continua mejora con futuras optimizaciones de rendimiento, 
 ## 👨‍💻 Autor
 
 Proyecto desarrollado íntegramente por mí como aplicación full-stack para portfolio profesional.
+
+---
+
+## 📬 Contacto
+
+Si deseas más información sobre el proyecto o su arquitectura, puedes contactarme a través de LinkedIn o GitHub.
+
+Disponible para oportunidades como Desarrolladora Full-Stack / Backend Junior.
 
 
